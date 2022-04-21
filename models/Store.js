@@ -9,9 +9,9 @@ const StoreSchema=new mongoose.Schema({
         trim:true,
         maxlength:[10, 'Store ID must be less than 10 chars']
     },
-    adress:{
+    address:{
         type:String,
-        required:[true, 'Please add an adress']
+        required:[true, 'Please add an address']
     },
     location: {
         type: {
@@ -23,15 +23,25 @@ const StoreSchema=new mongoose.Schema({
           index:'2dsphere' //2dsphere support queries that calculates geometries on an earth like sphere
 
         },
-        formattedAdress:String
+        formattedAddress:String
       },
       createdAt:{
           type:Date,
           default:Date.now
       }
 });
-StoreSchema.pre('save', async function(next){
-  const loc=await geocoder.geocode(this.adress);
-  console.log(loc);
+
+// Geocode & create location
+// we awnt to save before it is sent to the db
+StoreSchema.pre('save', async function(next) {
+  const loc = await geocoder.geocode(this.address);
+  this.location = {
+    type: 'Point',
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress
+  };
+  // Do not save address
+  this.address=undefined;
+  next(); 
 })
 module.exports=mongoose.model('Store', StoreSchema)

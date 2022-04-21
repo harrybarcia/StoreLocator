@@ -18,6 +18,10 @@ app.use(express.json());// send data (json) to our API
 // Enable Cors
 app.use(cors());
 
+// Set static folder
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 //Routes
 app.use('/api/v1/stores',require('./routes/stores.js'));
 
