@@ -6,7 +6,13 @@ const map = new mapboxgl.Map({
   zoom: 9,
   center: [2.48,48.8]
 });
-
+map.addControl(
+  new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken,
+  mapboxgl: mapboxgl
+  })
+  );
+  
 // Fetch stores from API
 async function getStores() {
   const res = await fetch('/api/v1/stores');
@@ -78,5 +84,16 @@ map.on('click', 'points', (e) => {
   .setHTML(address)
   .addTo(map);
   });
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      map.flyTo({
+        center: [position.coords.longitude,position.coords.latitude
+        ],
+        essential: true // this animation is considered essential with respect to prefers-reduced-motion
+     });
+    });
+  }
+
 
 getStores();
