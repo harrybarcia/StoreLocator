@@ -13,7 +13,9 @@ async function getStores() {
   const data = await res.json();
 
   const stores = data.data.map(store => {
+    console.log(store)
     return {
+
       type: 'Feature',
       geometry: {
         type: 'Point',
@@ -24,11 +26,11 @@ async function getStores() {
       },
       properties: {
         storeId: store.storeId,
+        formattedAddress:store.location.formattedAddress,  
         icon: 'shop'
       }
     };
   });
-
   loadMap(stores);
 }
 
@@ -43,6 +45,7 @@ function loadMap(stores) {
         data: {
           type: 'FeatureCollection',
           features: stores
+          
         }
       },
       layout: {
@@ -56,5 +59,24 @@ function loadMap(stores) {
     });
   });
 }
+
+
+map.on('click', 'points', (e) => {
+  // Copy coordinates array.
+  const coordinates = e.features[0].geometry.coordinates.slice();
+  const address = e.features[0].properties.formattedAddress;
+   console.log(e.features);
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+   
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(address)
+  .addTo(map);
+  });
 
 getStores();

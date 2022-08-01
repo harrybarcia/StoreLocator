@@ -3,9 +3,8 @@ const express=require('express');
 const dotenv=require('dotenv');
 const cors=require('cors');
 const connectDB=require('./config/db')
+
 // load env vars
-
-
 dotenv.config({path:'./config/config.env' });
 
 
@@ -21,11 +20,12 @@ app.use(cors());
 // Set static folder
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+// route test
+app.get('/test',(req, res)=>{
+    res.send('Hell');
+})
 //Routes
 app.use('/api/v1/stores',require('./routes/stores.js'));
-
-
 
 const PORT=process.env.PORT
 app.listen(PORT, ()=>console.log(`server running in ${process.env.NODE_ENV} mode on port ${PORT}`))
