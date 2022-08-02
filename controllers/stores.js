@@ -4,7 +4,7 @@ const Store=require('../models/Store')
 // @route GET /api/v1/stores
 // @access Public
 
-exports.getStores= async (req, res, next)=>{
+exports.getStores = async (req, res, next)=>{
     try {
         const stores=await Store.find();
         return res.status(200).json({
@@ -23,6 +23,7 @@ exports.getStores= async (req, res, next)=>{
 // @access Public
 exports.addStore= async (req, res, next)=>{
     try {
+        console.log('here');
         const store=await Store.create(req.body);
         return res.status(200).json({
             success:true,

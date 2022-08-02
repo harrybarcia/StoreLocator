@@ -33,7 +33,8 @@ async function getStores() {
       properties: {
         storeId: store.storeId,
         formattedAddress:store.location.formattedAddress,  
-        icon: 'shop'
+        icon: 'shop',
+        image:store.image
       }
     };
   });
@@ -71,7 +72,9 @@ map.on('click', 'points', (e) => {
   // Copy coordinates array.
   const coordinates = e.features[0].geometry.coordinates.slice();
   const address = e.features[0].properties.formattedAddress;
-   console.log(e.features);
+  const image=e.features[0].properties;
+  console.log(image);
+   console.log(e.features[0].properties.image);
   // Ensure that if the map is zoomed out such that multiple
   // copies of the feature are visible, the popup appears
   // over the copy being pointed to.
@@ -81,7 +84,8 @@ map.on('click', 'points', (e) => {
    
   new mapboxgl.Popup()
   .setLngLat(coordinates)
-  .setHTML(address)
+  .setHTML(`<img src='${image}.replace("C:\fakepath", "./uploads")' style="width:100px;height:100px">`
+  )
   .addTo(map);
   });
 
