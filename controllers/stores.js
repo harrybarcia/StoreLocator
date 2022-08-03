@@ -24,11 +24,22 @@ exports.getStores = async (req, res, next)=>{
 exports.addStore= async (req, res, next)=>{
     try {
         console.log('here');
-        const store=await Store.create(req.body);
-        return res.status(200).json({
-            success:true,
-            data:store
-        })       
+        console.log(req.body);
+        const store=new Store({
+            storeId:req.body.storeId,
+            address:req.body.address,
+            image:req.file.path
+        })
+        store.
+        save()
+        .then(()=>{
+            res.status(201).json({
+                success:true,
+                message:"Store added successfully"
+            })
+        console.log(store);
+        console.log(req.file);
+        })
  
     } catch (err) {
         console.error(err);

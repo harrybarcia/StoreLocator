@@ -72,7 +72,7 @@ map.on('click', 'points', (e) => {
   // Copy coordinates array.
   const coordinates = e.features[0].geometry.coordinates.slice();
   const address = e.features[0].properties.formattedAddress;
-  const image=e.features[0].properties;
+  const image=e.features[0].properties.image;
   console.log(image);
    console.log(e.features[0].properties.image);
   // Ensure that if the map is zoomed out such that multiple
@@ -84,7 +84,7 @@ map.on('click', 'points', (e) => {
    
   new mapboxgl.Popup()
   .setLngLat(coordinates)
-  .setHTML(`<img src='${image}.replace("C:\fakepath", "./uploads")' style="width:100px;height:100px">`
+  .setHTML(`<img src='../${image}' style="width:100px">`
   )
   .addTo(map);
   });
