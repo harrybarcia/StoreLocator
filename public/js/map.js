@@ -98,6 +98,39 @@ map.on('click', 'points', (e) => {
      });
     });
   }
+  map.on("load", function () {
 
 
-getStores();
+  // ajout satellite
+  map.addLayer({
+    id: "satellite",
+    source: { type: "raster", url: "mapbox://mapbox.satellite", tileSize: 256 },
+    type: "raster",
+    layout: { visibility: "none" },
+
+  
+  });
+  
+
+  var switchy = document.getElementById("preview");
+  console.log(switchy)
+  switchy.src = "../images/sat.jpg";
+  // Construct a static map url
+  // https://www.mapbox.com/developers/api/static/
+  // fonction qui permet l'affichage de la map au click sur l'image preview
+    console.log(switchy);
+    switchy.addEventListener("click", function () {
+      switchy = document.getElementById("preview");
+      if (switchy.className === "on") {
+        switchy.setAttribute("class", "off");
+        map.setLayoutProperty("satellite", "visibility", "none");
+        console.log(switchy);
+        document.getElementById("preview").src = "../images/sat.jpg";
+      } else {
+        switchy.setAttribute("class", "on");
+        map.setLayoutProperty("satellite", "visibility", "visible");
+        document.getElementById("preview").src = "../images/street.jpg";
+      }
+    });
+  });
+    getStores();

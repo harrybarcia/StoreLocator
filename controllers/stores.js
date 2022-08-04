@@ -30,8 +30,8 @@ exports.addStore= async (req, res, next)=>{
             address:req.body.address,
             image:req.file.path
         })
-        store.
-        save()
+        store
+        .save()
         .then(()=>{
             res.status(201).json({
                 success:true,

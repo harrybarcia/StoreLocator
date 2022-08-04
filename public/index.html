@@ -12,7 +12,13 @@
     <title>Store locator</title>
     <!-- Load the `mapbox-gl-geocoder` plugin. -->
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
+<script src='https://cdn.rawgit.com/mapbox/geo-viewport/8f71814c/geo-viewport.js'></script>
+
 </head>
 <body>
     <h1>Hello</h1>
@@ -22,9 +28,17 @@
         </h1>
         <a href="add.html" class="btn btn-success mb-4">Add Store</a>
         <div
-          id="map"
-          style="width: 100%; height: 500px;border-radius: 5px;"
-        ></div>
+          id="map" style="width: 100%; height: 500px;border-radius: 5px;">
+        <img id="preview" style="position: absolute;
+          bottom: 40px;
+          right: 10px;
+          border: 2px solid grey;
+          width: 30px;
+          height: 30px;
+          object-fit: cover;
+          z-index: 1000"
+        />
+      </div>
       </div>
       <div class="container">
         <button id="show" class="btn">Show my location</button>
