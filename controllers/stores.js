@@ -4,7 +4,7 @@ const Store=require('../models/Store')
 // @route GET /api/v1/stores
 // @access Public
 
-exports.getStores = async (req, res, next)=>{
+exports.getStores= async (req, res, next)=>{
     try {
         const stores=await Store.find();
         return res.status(200).json({
@@ -23,23 +23,11 @@ exports.getStores = async (req, res, next)=>{
 // @access Public
 exports.addStore= async (req, res, next)=>{
     try {
-        console.log('here');
-        console.log(req.body);
-        const store=new Store({
-            storeId:req.body.storeId,
-            address:req.body.address,
-            image:req.file.path
-        })
-        store
-        .save()
-        .then(()=>{
-            res.status(201).json({
-                success:true,
-                message:"Store added successfully"
-            })
-        console.log(store);
-        console.log(req.file);
-        })
+        const store=await Store.create(req.body);
+        return res.status(200).json({
+            success:true,
+            data:store
+        })       
  
     } catch (err) {
         console.error(err);

@@ -25,13 +25,10 @@ const StoreSchema=new mongoose.Schema({
         },
         formattedAddress:String
       },
-    createdAt:{
-        type:Date,
-        default:Date.now
-    },
-    image:{
-      type:String, required:true
-    }
+      createdAt:{
+          type:Date,
+          default:Date.now
+      }
 });
 
 // Geocode & create locat
@@ -42,7 +39,7 @@ StoreSchema.pre('save', async function(next) {
     type: 'Point',
     coordinates: [loc[0].longitude, loc[0].latitude],
     formattedAddress: loc[0].formattedAddress
-    };
+  };
   // Do not save address
   this.address=undefined;
   next(); 
