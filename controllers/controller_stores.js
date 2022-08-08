@@ -1,4 +1,4 @@
-const Store=require('../models/Store')
+const Store=require('../models/model_Store')
 
 // @desc Get all stores
 // @route GET /api/v1/stores
@@ -23,11 +23,15 @@ exports.getStores= async (req, res, next)=>{
 // @access Public
 exports.addStore= async (req, res, next)=>{
     try {
+        console.log('hello')
+        console.log(req.file)
+
         const store=await Store.create(req.body);
         return res.status(200).json({
             success:true,
             data:store
         })       
+
  
     } catch (err) {
         console.error(err);

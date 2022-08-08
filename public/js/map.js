@@ -19,7 +19,6 @@ async function getStores() {
   const data = await res.json();
 
   const stores = data.data.map(store => {
-    console.log(store)
     return {
 
       type: 'Feature',

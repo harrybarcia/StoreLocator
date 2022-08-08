@@ -28,8 +28,18 @@ const StoreSchema=new mongoose.Schema({
       createdAt:{
           type:Date,
           default:Date.now
+      },
+      image:{
+        name: String,
+        desc: String,
+        img:
+        {
+            data: Buffer,
+            contentType: String
+        }
       }
-});
+
+    });
 
 // Geocode & create locat
 // we awnt to save before it is sent to the db

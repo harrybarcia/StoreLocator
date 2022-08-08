@@ -3,10 +3,9 @@ const express=require('express');
 const dotenv=require('dotenv');
 const cors=require('cors');
 const connectDB=require('./config/db')
-
 // load env vars
 dotenv.config({path:'./config/config.env' });
-
+const bodyParser=require('body-parser');
 
 connectDB();
 const app=express();
@@ -21,9 +20,11 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 // route test
-app.get('/test',(req, res)=>{
-    res.send('Hell');
-})
+app.use(bodyParser.urlencoded({
+    extended: false
+ }));
+
+
 //Routes
 app.use('/api/v1/stores',require('./routes/stores.js'));
 
