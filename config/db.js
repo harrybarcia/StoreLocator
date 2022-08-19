@@ -1,17 +1,29 @@
-const mongoose=require('mongoose');
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
 
-const connectDB=async()=>{
+let _db;
 
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
-            //deleted all options
-        });
+const mongoConnect = callback => {
+  MongoClient.connect(
+    'mongodb+srv://admin:doudou@cluster0.iaepn.mongodb.net/storelocatordb'
+  )
+    .then(client => {
+      _db = client.db();
+      callback();
+      console.log('Connected!');
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+};
 
-        console.log(`MongoDb connected : ${conn.connection.host}`);
-    } catch (error) {
-        console.error(error);
-        process.exit(1);
-        
-    }
-}
-module.exports=connectDB;
+const getDb = () => {
+  if (_db) {
+    return _db;
+  }
+  throw 'No database found!';
+};
+
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;

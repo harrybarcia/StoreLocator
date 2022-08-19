@@ -32,7 +32,8 @@ async function getStores() {
       properties: {
         storeId: store.storeId,
         formattedAddress:store.location.formattedAddress,  
-        icon: 'shop'
+        icon: 'shop',
+        image:store.image
       }
     };
   });
@@ -70,6 +71,7 @@ map.on('click', 'points', (e) => {
   // Copy coordinates array.
   const coordinates = e.features[0].geometry.coordinates.slice();
   const address = e.features[0].properties.formattedAddress;
+  const image = e.features[0].properties.image;
    console.log(e.features);
   // Ensure that if the map is zoomed out such that multiple
   // copies of the feature are visible, the popup appears

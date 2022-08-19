@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 const geocoder=require('../utils/geocoder');
-
+console.log('dans mon model');
 const StoreSchema=new mongoose.Schema({
     storeId:{
         type:String,
@@ -29,18 +29,9 @@ const StoreSchema=new mongoose.Schema({
           type:Date,
           default:Date.now
       },
-      image:{
-        name: String,
-        desc: String,
-        img:
-        {
-            data: Buffer,
-            contentType: String
-        }
-      }
-
+      image:String,
     });
-
+console.log("address")
 // Geocode & create locat
 // we awnt to save before it is sent to the db
 StoreSchema.pre('save', async function(next) {

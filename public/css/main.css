@@ -1,0 +1,14 @@
+.main-header__item-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+
+  .main-header__nav {
+    height: 100%;
+    width: 100%;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+  }

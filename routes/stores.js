@@ -1,12 +1,15 @@
 const express=require('express');
-const {getStores, addStore}=require('../controllers/controller_stores');
 const multer=require('multer');
+
+const adminController = require('../controllers/controller_stores');
 const router=express.Router();
+
+const store=require('../models/model_Store');
 
 
 const fileStorage=multer.diskStorage({
     destination:(req,file,cb)=>{
-        cb(null, './public/uploads/');
+        cb(null, 'images');
     },
     filename:(req,file,cb)=>{
         cb(null, file.originalname);
@@ -17,11 +20,8 @@ const upload=multer({storage:fileStorage}).single('image');
 
 
 
-router.route('/').get(getStores)
-router.route('/').post(upload, addStore)
+router.route('/').post(upload, adminController.addStore)
+router.route('/').get(adminController.getStores)
 
 
-router.get('/', (req, res)=>{
-    res.send('Hello')
-});
 module.exports=router;
