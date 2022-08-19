@@ -2,13 +2,19 @@ const path=require('path');
 const express=require('express');
 const dotenv=require('dotenv');
 const cors=require('cors');
+const mongoose = require('mongoose');
 
-const mongoConnect=require('./config/db').mongoConnect;
+
+
 // load env vars
 dotenv.config({path:'./config/config.env' });
 const bodyParser=require('body-parser');
 
 const User=require('./models/model_User');
+
+const MONGODB_URI =
+  'mongodb+srv://admin:doudou@cluster0.iaepn.mongodb.net/storelocatordb';
+
 
 const app=express();
 
@@ -50,8 +56,12 @@ app.use(bodyParser.urlencoded({
 // }) 
 app.use('/api/v1/stores',require('./routes/stores.js'));
 
-
-mongoConnect(() => {
-    app.listen(3001);
+mongoose
+  .connect(MONGODB_URI)
+  .then(result => {
+    
+    app.listen(3000);
+  })
+  .catch(err => {
+    console.log(err);
   });
-  

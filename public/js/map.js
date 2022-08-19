@@ -17,8 +17,10 @@ map.addControl(
 async function getStores() {
   const res = await fetch('/api/v1/stores');
   const data = await res.json();
-
-  const stores = data.data.map(store => {
+  console.log('data');
+  console.log(data);
+try{
+  const stores = data.map(store => {
     return {
 
       type: 'Feature',
@@ -38,6 +40,10 @@ async function getStores() {
     };
   });
   loadMap(stores);
+}
+catch(err){
+  console.log(err);
+}
 }
 
 // Load map with stores

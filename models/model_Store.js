@@ -29,7 +29,7 @@ const StoreSchema=new mongoose.Schema({
           type:Date,
           default:Date.now
       },
-      image:String,
+      // image:String,
     });
 console.log("address")
 // Geocode & create locat
