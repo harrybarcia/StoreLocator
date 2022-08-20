@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 
 
+
 // load env vars
 dotenv.config({path:'./config/config.env' });
 const bodyParser=require('body-parser');
@@ -17,10 +18,12 @@ const MONGODB_URI =
 
 
 const app=express();
-
-// Body parser
+app.set('view engine', 'ejs');
+app.set("views", path.join(__dirname, "views"));
+  // Body parser
 app.use(express.json());// send data (json) to our API
 
+const authRoutes = require('./routes/auth');
 // Enable Cors
 app.use(cors());
 
@@ -55,6 +58,7 @@ app.use(bodyParser.urlencoded({
 //     res.redirect('/index.html');
 // }) 
 app.use('/api/v1/stores',require('./routes/stores.js'));
+app.use(authRoutes);
 
 mongoose
   .connect(MONGODB_URI)
