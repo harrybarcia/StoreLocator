@@ -88,7 +88,9 @@ map.on('click', 'points', (e) => {
    
   new mapboxgl.Popup()
   .setLngLat(coordinates)
-  .setHTML(address)
+  .setHTML(`
+  <h3>${address}</h3>
+  <img src='/images/${image}' style="width:100px">`)
   .addTo(map);
   });
 

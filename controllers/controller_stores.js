@@ -18,10 +18,11 @@ exports.getStores = (req, res, next) => {
 // @route POST /api/v1/stores
 // @access Public
 exports.addStore=async  (req, res, next)=>{
-    const {storeId, address}=req.body;
-    console.log(storeId, address);
-    console.log('post');
-        const store=await new Store(req.body);
+  const storeId=req.body.storeId;
+  const address=req.body.address;
+  const image=req.file.filename;
+        const store=await new Store({
+          storeId:storeId, address: address, image:image});
         store
         .save()
         .then(results => {
