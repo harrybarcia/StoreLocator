@@ -19,7 +19,7 @@
         Add Store
       </h1>
 
-      <form id="store-form" class="mb-4" action="/api/v1/stores" method="POST" enctype="multipart/form-data">
+      <form id="store-form" class="mb-4" action="/add-store?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
         <div class="form-group">
           <label for="store-id">Store ID</label>
           <input type="text" id="store-id" class="form-control" name="storeId" />
@@ -30,8 +30,10 @@
         </div>
         <label for="image">Image</label>
         <input type="file" id="image" name="image"/> 
+
+
         <button type="submit" class="btn btn-primary">Submit now</button>
-        <a href="index.html" class="btn btn-secondary">Back</a>
+        <a href="/index" class="btn btn-secondary">Back</a>
       </form>
     </div>
 

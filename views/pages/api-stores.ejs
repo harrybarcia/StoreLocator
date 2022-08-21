@@ -1,0 +1,22 @@
+    <link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+
+
+    <main>
+        <% if (prods.length > 0) { %>
+            <div class="grid">
+                <% for (let product of prods) { %>
+                    <article class="card product-item">
+                        <header class="card__header">
+                            <h1 class="product__title"><%= product.address %></h1>
+                        </header>
+                       
+                    </article>
+                <% } %>
+            </div>
+        <% } else { %>
+            <h1>No Products Found!</h1>
+        <% } %>
+    </main>

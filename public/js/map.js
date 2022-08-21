@@ -15,7 +15,7 @@ map.addControl(
   
 // Fetch stores from API
 async function getStores() {
-  const res = await fetch('/api/v1/stores');
+  const res = await fetch('/api-stores');
   const data = await res.json();
   console.log('data');
   console.log(data);
