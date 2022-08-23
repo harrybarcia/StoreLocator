@@ -1,0 +1,26 @@
+    </head>
+
+    <body>
+
+            <main>
+                <% if (prods.length > 0) { %>
+                    <div class="grid">
+                        <% for (let store of prods) { %>
+                            <article class="card store-item">
+                                <header class="card__header">
+                                    <h1 class="store__title">
+                                        <%= store.location %>
+                                    </h1>
+                                </header>
+                                
+                                <div class="card__actions">
+                                    <a href="/stores/<%= store.storeId %>" >store._id dans ma req : <%= store._id %></a>
+                      
+                                </div>
+                            </article>
+                            <% } %>
+                    </div>
+                    <% } else { %>
+                        <h1>No stores Found!</h1>
+                        <% } %>
+            </main>

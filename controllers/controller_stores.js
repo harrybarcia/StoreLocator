@@ -15,6 +15,37 @@ exports.getStores = (req, res, next) => {
     });
 };
 
+exports.getStoresList = (req, res, next) => {
+  Store.find()
+    .then(stores => {
+      console.log(stores);
+      res.render('stores/stores-list', {
+        prods: stores,
+        pageTitle: 'All stores',
+        path: '/stores-list',
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+exports.getStore = (req, res, next) => {
+  console.log('heree');
+  console.log(req.params);
+  const prodId = (req.params.storeId).trim();
+  console.log(prodId)
+  Store.findById(prodId)
+    .then(store => {
+      console.log(store);
+      res.render('stores/store-details', {
+        prods: store,
+        path: '/stores/:storeId',
+      });
+    })
+    .catch(err => console.log(err));
+};
+
   exports.getAddStore= (req, res, next)=>{
 
       res.render('pages/add',{

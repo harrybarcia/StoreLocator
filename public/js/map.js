@@ -32,6 +32,7 @@ try{
         ]
       },
       properties: {
+        _id: store._id,
         storeId: store.storeId,
         formattedAddress:store.location.formattedAddress,  
         icon: 'shop',
@@ -78,6 +79,7 @@ map.on('click', 'points', (e) => {
   const coordinates = e.features[0].geometry.coordinates.slice();
   const address = e.features[0].properties.formattedAddress;
   const image = e.features[0].properties.image;
+  const storeId = e.features[0].properties._id;
    console.log(e.features);
   // Ensure that if the map is zoomed out such that multiple
   // copies of the feature are visible, the popup appears
@@ -90,7 +92,10 @@ map.on('click', 'points', (e) => {
   .setLngLat(coordinates)
   .setHTML(`
   <h3>${address}</h3>
-  <img src='/images/${image}' style="width:100px">`)
+  <img src='/images/${image}' style="width:100px">
+  <a href='/stores/${storeId}' class="btn">Details</a>
+
+  `)
   .addTo(map);
   });
 
