@@ -1,28 +1,42 @@
-    </head>
+<%- include('../includes/head.ejs') %>
+</head>
+
+
 
     <body>
 
             <main>
+                <%- include('../includes/navigation.ejs') %>
+
                 <% if (prods.length > 0) { %>
                     <div class="grid">
                         <% for (let store of prods) { %>
-                            <article class="card store-item">
+                            <article class="card product-item">
                                 <header class="card__header">
-                                    <h1 class="store__title">
-                                        <%= store.location %>
+                                    <h1 class="product__title">
+                                        <%= store.location.formattedAddress %>
                                     </h1>
                                 </header>
+                                <div >
+                                    <img src="/images/<%=store.image%>" style="width:300px">
+                                </div>
                                 
                                 <div class="card__actions">
-                                    <a href="/stores/<%= store._id %>" >store._id dans ma req : <%= store._id %></a>
+                                   
                                     <a href="/edit-store/<%= store._id %>?edit=true" class="btn">Edit</a>
+                                    <form action="" method="POST">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-                      
-                                </div>
+                                        <input type="hidden" value="<%= store._id %>" name="storeId">
+                                        <button class="btn" type="submit">Delete</button>
+                                    </form>
+                                
+                            </div>
                             </article>
                             <% } %>
                     </div>
                     <% } else { %>
-                        <h1>No stores Found!</h1>
+                        <h1>No Stores Found!</h1>
                         <% } %>
             </main>
+            <%- include('../includes/end.ejs') %>

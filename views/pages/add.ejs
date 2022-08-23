@@ -14,11 +14,15 @@
     <title>Store Locator - Add Store</title>
   </head>
   <body>
+    <%- include('../includes/navigation.ejs') %>
+
     <div class="container my-3">
 
       <form id="store-form" class="mb-4" action="/<% if (editing) { %>edit-store<% } else { %>add-store<% } %>?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
 
+        
         <div class="form-group">
+
           <label for="store-address">Store Address</label>
           <input type="text" id="store-address" class="form-control" name="address" value="<% if (editing) { %><%= store.location.formattedAddress %><% } %>" />
         </div>

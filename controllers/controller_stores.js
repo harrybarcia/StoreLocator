@@ -111,7 +111,7 @@ exports.getEditStore = (req, res, next) => {
 exports.postEditStore = (req, res, next) => {
   const prodId = req.body.storeId;
   const updatedAddress = req.body.address;
-  const updatedImage = req.file.image;
+  const updatedImage = req.file.filename;
 
 
   Store.findById(prodId)
@@ -120,11 +120,12 @@ exports.postEditStore = (req, res, next) => {
       //   return res.redirect('/');
       // }
       store.address = updatedAddress;
-      // store.image = updatedImage;
+      store.image = updatedImage;
       return store.save()
     .then(result => {
       console.log('UPDATED PRODUCT!');
-      res.redirect('/stores/' + prodId);
+      // res.redirect('/stores/' + prodId);
+      res.redirect('/');
     });
   })
     .catch(err => console.log(err));

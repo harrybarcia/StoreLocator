@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<%- include('../includes/head.ejs') %>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
@@ -16,74 +12,25 @@
 
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <main>
+    <%- include('../includes/navigation.ejs') %>
   
-    <div class="collapse navbar-collapse main-header__nav " style="margin:1em" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </li>
-        <li class="main-header__item">
-          <a  href="/stores-list">See stores
-          </a>
-      </li>
-
-      </ul>
-      <ul class="main-header__item-list">
-        <% if (!isAuthenticated) { %>
-            <li class="main-header__item" style="margin:8px">
-                <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
-            </li>
-            <li class="main-header__item" style="margin:8px">
-                <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
-            </li>
-            
-            
-            
-            
-            <% } else { %>
-              <li class="main-header__item">
-                <form action="/logout" method="post">
-                  <input type="visible" name="_csrf" value="<%= csrfToken %>">
-                  <button type="submit">Logout</button>
-                </form>
-                <li class="main-header__item" style="margin:8px">
-                  <a href="/add" class="btn btn-success mb-4">Add Store</a>
-                </li>
-            </li>
-        <% } %>
-    </ul>
-
-    </div>
-  </nav>
-    <div class="container my-3">
-        <h1 class="display-4 text-center">
-          <i class="fas fa-map-marked mr-4"></i>Store Locator test
-        </h1>
-        
-        <div
-          id="map"
-          style="width: 100%; height: 500px;border-radius: 5px;"
-        ></div>
-      </div>
-      <div class="container">
-        <button id="show" class="btn">Show my location</button>
-        <div id="message"></div>
-    </div>
-
-      <script src="js/map.js"></script>
-      <script src="js/geolocation.js"></script>
+  
+      <div class="container my-3">
+          <h1 class="display-4 text-center">
+            <i class="fas fa-map-marked mr-4"></i>Store Locator test
+          </h1>
+          
+          <div
+            id="map"
+            style="width: 100%; height: 500px;border-radius: 5px;"
+          ></div>
+        </div>
+  
+  
+        <script src="js/map.js"></script>
+        <script src="js/geolocation.js"></script>
 
 
-</body>
-</html>
+  </main>  
+  <%- include('../includes/end.ejs') %>
