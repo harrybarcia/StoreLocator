@@ -15,24 +15,21 @@
   </head>
   <body>
     <div class="container my-3">
-      <h1 class="display-4 text-center">
-        Add Store
-      </h1>
 
-      <form id="store-form" class="mb-4" action="/add-store?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="store-id">Store ID</label>
-          <input type="text" id="store-id" class="form-control" name="storeId" />
-        </div>
+      <form id="store-form" class="mb-4" action="/<% if (editing) { %>edit-store<% } else { %>add-store<% } %>?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
+
         <div class="form-group">
           <label for="store-address">Store Address</label>
-          <input type="text" id="store-address" class="form-control" name="address" />
+          <input type="text" id="store-address" class="form-control" name="address" value="<% if (editing) { %><%= store.location.formattedAddress %><% } %>" />
         </div>
         <label for="image">Image</label>
-        <input type="file" id="image" name="image"/> 
+        <input type="file" id="image" name="image" value="<% if (editing) { %><%= store.image %><% } %>"/> 
+        <% if (editing) { %>
+          <input type="hidden" value="<%= store._id %>" name="storeId">
+      <% } %>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-
-        <button type="submit" class="btn btn-primary">Submit now</button>
+      <button class="btn" type="submit"><% if (editing) { %>Update Product<% } else { %>Add Product<% } %></button>
         <a href="/index" class="btn btn-secondary">Back</a>
       </form>
     </div>

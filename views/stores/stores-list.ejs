@@ -14,7 +14,9 @@
                                 </header>
                                 
                                 <div class="card__actions">
-                                    <a href="/stores/<%= store.storeId %>" >store._id dans ma req : <%= store._id %></a>
+                                    <a href="/stores/<%= store._id %>" >store._id dans ma req : <%= store._id %></a>
+                                    <a href="/edit-store/<%= store._id %>?edit=true" class="btn">Edit</a>
+
                       
                                 </div>
                             </article>

@@ -50,7 +50,8 @@ exports.getStore = (req, res, next) => {
 
       res.render('pages/add',{
           path:'/add-store',
-          pageTitle:'Add Store'
+          pageTitle:'Add Store',
+          editing:false
       })
       }
 // @desc Create a store
@@ -70,7 +71,8 @@ exports.addStore=async  (req, res, next)=>{
           res.render('pages/index', {
             pageTitle: 'Store Locator | Home',
             path: '/' ,
-          csrfToken:req.csrfToken()      
+          csrfToken:req.csrfToken(),
+
         })
         })
           .catch (err=>{
@@ -82,3 +84,48 @@ exports.addStore=async  (req, res, next)=>{
     })
 }
 
+
+exports.getEditStore = (req, res, next) => {
+  const editMode = req.query.edit;
+  if (!editMode) {
+    return res.redirect('/');
+  }
+  const prodId = req.params.storeId;
+  Store.findById(prodId)
+    .then(store => {
+      if (!store) {
+        return res.redirect('/');
+      }
+      res.render('pages/add',{
+        path:'/add',
+        pageTitle:'Add Store',
+        editing: editMode,
+        store: store,
+        csrfToken:req.csrfToken()      
+
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postEditStore = (req, res, next) => {
+  const prodId = req.body.storeId;
+  const updatedAddress = req.body.address;
+  const updatedImage = req.file.image;
+
+
+  Store.findById(prodId)
+    .then(store => {
+      // if (store.userId.toString() !== req.user._id.toString()) {
+      //   return res.redirect('/');
+      // }
+      store.address = updatedAddress;
+      // store.image = updatedImage;
+      return store.save()
+    .then(result => {
+      console.log('UPDATED PRODUCT!');
+      res.redirect('/stores/' + prodId);
+    });
+  })
+    .catch(err => console.log(err));
+};
