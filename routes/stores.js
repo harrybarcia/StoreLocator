@@ -37,6 +37,7 @@ router.post('/edit-store',isAuth, upload, adminController.postEditStore);
 
 
 router.post('/add-store', isAuth, upload, adminController.addStore)
+router.post('/delete-store', isAuth, adminController.deleteStore)
 
 
 

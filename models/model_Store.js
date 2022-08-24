@@ -1,21 +1,11 @@
 const mongoose=require('mongoose');
 const geocoder=require('../utils/geocoder');
-console.log('dans mon model');
-const StoreSchema=new mongoose.Schema({
-    storeId:{
-        type:String,
-        require:[true, 'Please add a store ID'],
-        unique:true,
-        trim:true,
-        maxlength:[10, 'Store ID must be less than 10 chars']
-    },
-    address:{
-        type:String,
-        required:[true, 'Please add an address']
-    },
-    location: {
-        type: {
-          type: String, // Don't do `{ location: { type: String } }`
+
+const Schema=mongoose.Schema;
+const StoreSchema=new Schema(
+  {storeId:{type: Schema.Types.ObjectId},
+    address:{type:String,required:[true, 'Please add an address']},
+    location: {type: {type: String, // Don't do `{ location: { type: String } }`
           enum: ['Point'], // 'location.type' must be 'Point'
         },
         coordinates: {
@@ -30,8 +20,10 @@ const StoreSchema=new mongoose.Schema({
           default:Date.now
       },
       image:String,
+      userId: {type: Schema.Types.ObjectId, ref: 'model_User'}
+
     });
-console.log("address")
+
 // Geocode & create locat
 // we awnt to save before it is sent to the db
 StoreSchema.pre('save', async function(next) {

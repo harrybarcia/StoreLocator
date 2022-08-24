@@ -17,14 +17,14 @@
                                         <%= store.location.formattedAddress %>
                                     </h1>
                                 </header>
-                                <div >
-                                    <img src="/images/<%=store.image%>" style="width:300px">
+                                <div class="card__actions">
+                                    <img src="/images/<%=store.image%>" style="width:300px ">
                                 </div>
                                 
                                 <div class="card__actions">
                                    
                                     <a href="/edit-store/<%= store._id %>?edit=true" class="btn">Edit</a>
-                                    <form action="" method="POST">
+                                    <form action="/delete-store" method="POST">
                                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
                                         <input type="hidden" value="<%= store._id %>" name="storeId">

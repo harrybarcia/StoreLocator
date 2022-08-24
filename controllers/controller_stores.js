@@ -1,11 +1,12 @@
 const Store=require('../models/model_Store')
-
+const mongodb=require('mongodb');
 // @desc Get all stores
 // @route GET /api-stores
 // @access Public
 
 exports.getStores = (req, res, next) => {
-  Store.find()
+  
+  Store.find({ userId: req.user._id })
     .then(stores => {
       console.log(stores);
       return res.status(200).json(stores);
@@ -16,7 +17,7 @@ exports.getStores = (req, res, next) => {
 };
 
 exports.getStoresList = (req, res, next) => {
-  Store.find()
+  Store.find({ userId: req.user._id })
     .then(stores => {
       console.log(stores);
       res.render('stores/stores-list', {
@@ -33,9 +34,9 @@ exports.getStoresList = (req, res, next) => {
 exports.getStore = (req, res, next) => {
   console.log('heree');
   console.log(req.params);
-  const prodId = (req.params.storeId).trim();
-  console.log(prodId)
-  Store.findById(prodId)
+  const storeId = (req.params.storeId).trim();
+  console.log(storeId)
+  Store.findById(storeId)
     .then(store => {
       console.log(store);
       res.render('stores/store-details', {
@@ -47,7 +48,7 @@ exports.getStore = (req, res, next) => {
 };
 
   exports.getAddStore= (req, res, next)=>{
-
+    console.log("add store", req.user);
       res.render('pages/add',{
           path:'/add-store',
           pageTitle:'Add Store',
@@ -59,14 +60,18 @@ exports.getStore = (req, res, next) => {
 // @access Public
 exports.addStore=async  (req, res, next)=>{
   console.log('session addstores', req.headers['csrf-token']);
-  const storeId=req.body.storeId;
   const address=req.body.address;
-  const image=req.file.filename;
+  const image = req.file.filename;
+  const storeId = new mongodb.ObjectId();
+  const userId = req.user._id;
+
         const store=await new Store({
-          storeId:storeId, address: address, image:image});
+          storeId:storeId,
+          address: address, image:image, userId:userId});
         store
         .save()
         .then(results => {
+          console.log('results');
           console.log(results);
           res.render('pages/index', {
             pageTitle: 'Store Locator | Home',
@@ -90,8 +95,8 @@ exports.getEditStore = (req, res, next) => {
   if (!editMode) {
     return res.redirect('/');
   }
-  const prodId = req.params.storeId;
-  Store.findById(prodId)
+  const storeId = req.params.storeId;
+  Store.findById(storeId)
     .then(store => {
       if (!store) {
         return res.redirect('/');
@@ -109,12 +114,12 @@ exports.getEditStore = (req, res, next) => {
 };
 
 exports.postEditStore = (req, res, next) => {
-  const prodId = req.body.storeId;
+  const storeId = req.body.storeId;
   const updatedAddress = req.body.address;
   const updatedImage = req.file.filename;
 
 
-  Store.findById(prodId)
+  Store.findById(storeId)
     .then(store => {
       // if (store.userId.toString() !== req.user._id.toString()) {
       //   return res.redirect('/');
@@ -124,9 +129,19 @@ exports.postEditStore = (req, res, next) => {
       return store.save()
     .then(result => {
       console.log('UPDATED PRODUCT!');
-      // res.redirect('/stores/' + prodId);
+      // res.redirect('/stores/' + storeId);
       res.redirect('/');
     });
   })
+    .catch(err => console.log(err));
+};
+
+exports.deleteStore = (req, res, next) => {
+  const storeId = req.body.storeId;
+  Store.deleteOne({ _id: storeId })
+    .then(() => {
+      console.log('DESTROYED PRODUCT');
+      res.redirect('/stores-list');
+    })
     .catch(err => console.log(err));
 };

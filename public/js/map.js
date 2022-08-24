@@ -36,7 +36,8 @@ try{
         storeId: store.storeId,
         formattedAddress:store.location.formattedAddress,  
         icon: 'shop',
-        image:store.image
+        image:store.image,
+        userId:store.userId,
       }
     };
   });
@@ -80,6 +81,7 @@ map.on('click', 'points', (e) => {
   const address = e.features[0].properties.formattedAddress;
   const image = e.features[0].properties.image;
   const storeId = e.features[0].properties._id;
+  const userId = e.features[0].properties.userId;
    console.log(e.features);
   // Ensure that if the map is zoomed out such that multiple
   // copies of the feature are visible, the popup appears
@@ -91,9 +93,33 @@ map.on('click', 'points', (e) => {
   new mapboxgl.Popup()
   .setLngLat(coordinates)
   .setHTML(`
-  <h3>${address}</h3>
-  <img src='/images/${image}' style="width:100px">
+  <img src='/images/${image}' style="width:100%;max-height:200px; border-radius:3%;max-height: 182px;object-fit: cover">
+  
+  <div>
+  <span style="overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+              line-clamp: 3; 
+      -webkit-box-orient: vertical;
+      max-height: 60px;">
+    </strong>
+    ${address}
+  </span>
+  <span style="overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+              line-clamp: 3; 
+      -webkit-box-orient: vertical;
+      max-height: 60px;">
+    </strong>
+    ${userId}
+  </span>
+  </div>
+
   <a href='/stores/${storeId}' class="btn">Details</a>
+
 
   `)
   .addTo(map);
