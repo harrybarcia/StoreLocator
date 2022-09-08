@@ -9,27 +9,47 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+<script src="../../utils/fetch_map.js"></script>
 
 </head>
 <body>
+  <style type="text/css">
+    #info {
+    display: table;
+    position: relative;
+    margin: 0px auto;
+    word-wrap: anywhere;
+    white-space: pre-wrap;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    color: #222;
+    background: #fff;
+    }
+    </style>
   <main>
     <%- include('../includes/navigation.ejs') %>
   
   
+    <div id="info"></div>
       <div class="container my-3">
-          <h1 class="display-4 text-center">
-            <i class="fas fa-map-marked mr-4"></i>Store Locator test
-          </h1>
-          
+
           <div
             id="map"
-            style="width: 100%; height: 500px;border-radius: 5px;"
+            style="width: 100%; height: 90vh;border-radius: 5px;"
           ></div>
         </div>
   
   
         <script src="js/map.js"></script>
         <script src="js/geolocation.js"></script>
+        <script>
+          map.addControl(new mapboxgl.NavigationControl());
+          
+
+        </script>
 
 
   </main>  

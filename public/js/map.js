@@ -3,8 +3,10 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiaGFycnliYXJjaWEiLCJhIjoiY2s3dzRvdTJnMDBqODNlb
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
-  zoom: 9,
-  center: [2.48,48.8]
+  zoom: 11,
+  center: [-123.1, 49.25]
+  
+  
 });
 map.addControl(
   new MapboxGeocoder({
@@ -72,7 +74,51 @@ function loadMap(stores) {
       }
     });
   });
-}
+  
+    // Add a data source containing GeoJSON data.
+    map.addSource('maine', {
+          'type': 'geojson',
+          
+          'data': {
+          'type': 'Feature',
+          'geometry': {
+          'type': 'Polygon',
+          // These coordinates outline Maine.
+          'coordinates': [
+            [  
+              [-123.11, 49.36],
+              [-123.05, 49.36],
+              [-123.05, 49.33],
+              [-123.11, 49.33],
+              [-123.11, 49.36]
+            ]
+          ]
+        }
+      }
+    });
+    // Add a new layer to visualize the polygon.
+map.addLayer({
+  'id': 'maine',
+  'type': 'fill',
+  'source': 'maine', // reference the data source
+  'layout': {},
+  'paint': {
+  'fill-color': '#0080ff', // blue color fill
+  'fill-opacity': 0.5
+  }
+  });
+  // Add a black outline around the polygon.
+  map.addLayer({
+  'id': 'outline',
+  'type': 'line',
+  'source': 'maine',
+  'layout': {},
+  'paint': {
+  'line-color': '#000',
+  'line-width': 3
+  }
+  });
+ }
 
 
 map.on('click', 'points', (e) => {
@@ -137,3 +183,100 @@ map.on('click', 'points', (e) => {
 
 
 getStores();
+
+map.on('mousemove', (e) => {
+  document.getElementById('info').innerHTML =
+  // `e.point` is the x, y coordinates of the `mousemove` event
+  // relative to the top-left corner of the map.
+  JSON.stringify(e.point) +
+  '<br />' +
+  // `e.lngLat` is the longitude, latitude geographical position of the event.
+  JSON.stringify(e.lngLat.wrap());
+  });
+  
+//   const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
+// async function getISS() {
+//   const res = await fetch(api_url);
+//   const data = await res.json();
+//   console.log(data);
+//   const {latitude, longitude} = data;
+//   console.log(latitude, longitude);
+//   // Create a popup, but don't add it to the map yet.
+  
+//   var marker = new mapboxgl.Marker({ color: 'green' })
+//   marker.setLngLat([longitude, latitude])
+
+//   marker.setPopup(marker.setHTML("<h1>Hello World!</h1><img id= 'myImg' style = height = '100%' width = '100%' src = 'somePicture.jpeg' > </img>"))
+
+//   marker.addTo(map);
+  
+//   ;
+
+  
+// }
+// getISS();
+
+// setInterval(getISS, 1000);
+
+// map.on('load', async () => {
+//   // Get the initial location of the International Space Station (ISS).
+//   console.log("1")
+
+//   const geojson = await getLocation();
+  
+//   // Add the ISS location as a source.
+//   map.addSource('iss', {
+//     type: 'geojson',
+//   data: geojson
+// });
+// // Add the rocket symbol layer to the map.
+//   map.addLayer({
+//   'id': 'iss',
+//   'type': 'symbol',
+//   'source': 'iss',
+//   'layout': {
+//     'icon-image': 'rocket-15'
+//   }
+//   });
+   
+  // Update the source from the API every 2 seconds.
+  // const updateSource = setInterval(async () => {
+  // const geojson = await getLocation(updateSource);
+  // map.getSource('iss').setData(geojson);
+  // }, 50000);
+  
+  
+  // async function getLocation(updateSource) {
+  //   console.log("3")
+  // // Make a GET request to the API and return the location of the ISS.
+  // try {
+  // const response = await fetch(
+  // 'https://api.wheretheiss.at/v1/satellites/25544',
+  // { method: 'GET' }
+  // );
+  // const { latitude, longitude } = await response.json();
+  // // Fly the map to the location.
+  // map.flyTo({
+  // center: [longitude, latitude],
+  // speed: 0.5
+  // });
+  // // Return the location of the ISS as GeoJSON.
+  // return {
+  // 'type': 'FeatureCollection',
+  // 'features': [
+  // {
+  // 'type': 'Feature',
+  // 'geometry': {
+  // 'type': 'Point',
+  // 'coordinates': [longitude, latitude]
+  // }
+  // }
+  // ]
+  // };
+  // } catch (err) {
+  // // If the updateSource interval is defined, clear the interval to stop updating the source.
+  // if (updateSource) clearInterval(updateSource);
+  // throw new Error(err);
+  // }
+  // }
+  // });

@@ -4,8 +4,12 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "SET NODE_ENV=production& SET MONGO_USERNAME=admin& SET MONGO_PASSWORD=doudou& SET MONGO_DB=storelocatordb& nodemon app.js",
     "dev": "nodemon app.js"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+
   },
   "keywords": [],
   "author": "",

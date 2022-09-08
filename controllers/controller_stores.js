@@ -8,7 +8,7 @@ exports.getStores = (req, res, next) => {
   
   Store.find({ userId: req.user._id })
     .then(stores => {
-      console.log(stores);
+      
       return res.status(200).json(stores);
     })
     .catch(err => {
@@ -71,8 +71,7 @@ exports.addStore=async  (req, res, next)=>{
         store
         .save()
         .then(results => {
-          console.log('results');
-          console.log(results);
+          
           res.render('pages/index', {
             pageTitle: 'Store Locator | Home',
             path: '/' ,
