@@ -18,7 +18,7 @@ dotenv.config({path:'./config/config.env' });
 const bodyParser=require('body-parser');
 
 const User=require('./models/model_User');
-
+// adding a comment test for git
 const MONGODB_URI =
   
   `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.iaepn.mongodb.net/${process.env.MONGO_DATABASE}`;
