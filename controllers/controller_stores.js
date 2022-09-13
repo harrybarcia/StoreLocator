@@ -157,7 +157,7 @@ exports.getProducts = async (req, res, next) => {
     console.log(stores);
     res.render('pages/selection', {
       pageTitle: 'Store Locator | Home',
-      path: '/' + city ,
+      path: '/products',
       prods: stores,
       csrfToken:req.csrfToken()
     });

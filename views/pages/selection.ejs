@@ -38,7 +38,7 @@
   
     <div id="info"></div>
       <div class="container my-3">
-        <% var test ="myString"; %> 
+        <% prods %>
         <% if (prods.length > 0) { %>
 
           <div class="grid">
@@ -56,14 +56,10 @@
       <% } %>
   <div class="container">
     
-    <div id="searchWrapper">
-        <input
-            type="text"
-            name="searchBar"
-            id="searchBar"
-            placeholder="search for a character"
-        />
-    </div>
+    <form class="search" method="GET" action = "./products">
+      <input class="bar" type="text" placeholder="Search Restaurant..."  name="city">
+      <button><i class="fas fa-search"></i>Search a city</button>
+  </form>
 
           <div
             id="map"
@@ -75,10 +71,7 @@
       
 
         <script>
-      
-                   console.log("hey");
-          let getTest = "<%= test %>";
-          console.log(getTest);
+
 
           mapboxgl.accessToken = 'pk.eyJ1IjoiaGFycnliYXJjaWEiLCJhIjoiY2s3dzRvdTJnMDBqODNlbzhpcjdmaGxldiJ9.vg2wE4S7o_nryVx8IFIOuQ';
           const map = new mapboxgl.Map({
@@ -97,12 +90,12 @@
             );
             
           // Fetch stores from API
-          async function getStores() {
-            const res = await fetch('/products');
-            const data = await res.json();
-            console.log('data');
+           function getStores() {
+            let data = <%- JSON.stringify(prods) %>;
             console.log(data);
+
           try{
+            console.log("data", data);
             const stores = data.map(store => {
               return {
           
