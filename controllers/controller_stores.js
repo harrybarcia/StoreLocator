@@ -4,6 +4,7 @@ const mongodb=require('mongodb');
 // @route GET /api-stores
 // @access Public
 
+
 exports.getStores = (req, res, next) => {
   
   Store.find({ userId: req.user._id })
@@ -75,6 +76,7 @@ exports.addStore=async  (req, res, next)=>{
           res.render('pages/index', {
             pageTitle: 'Store Locator | Home',
             path: '/' ,
+            prods: results,
           csrfToken:req.csrfToken(),
 
         })
@@ -143,4 +145,28 @@ exports.deleteStore = (req, res, next) => {
       res.redirect('/stores-list');
     })
     .catch(err => console.log(err));
+};
+
+exports.getProducts = async (req, res, next) => {
+  
+  try{
+  const city = req.query.city
+  if (city !== undefined) {
+    const city = req.query.city.toLowerCase();
+    const stores = await Store.find({ city: city, userId: req.user._id })
+    console.log(stores);
+    res.render('pages/selection', {
+      pageTitle: 'Store Locator | Home',
+      path: '/' + city ,
+      prods: stores,
+      csrfToken:req.csrfToken()
+    });
+  } else {
+    
+    const stores = await Store.find({ userId: req.user._id })
+    return res.status(200).json(stores);
+  }
+  }catch(err){
+    console.log(err);
+  }
 };

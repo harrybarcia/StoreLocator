@@ -11,6 +11,9 @@
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
 <script src="../../utils/fetch_map.js"></script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
 </head>
 <body>
   <style type="text/css">
@@ -36,18 +39,78 @@
     <div id="info"></div>
       <div class="container my-3">
 
+  
+  <div class="container">
+    
+    <div id="searchWrapper">
+        <input
+            type="text"
+            name="searchBar"
+            id="searchBar"
+            placeholder="search for a character"
+        />
+    </div>
+    <form class="search" method="GET" action = "./products">
+      <input class="bar" type="text" placeholder="Search Restaurant..."  name="city">
+      <button onclick="getStores()"><i class="fas fa-search"></i>Search a city</button>
+  </form>
+
           <div
             id="map"
             style="width: 100%; height: 90vh;border-radius: 5px;"
           ></div>
         </div>
+      </div>
   
   
         <script src="js/map.js"></script>
         <script src="js/geolocation.js"></script>
         <script>
-          map.addControl(new mapboxgl.NavigationControl());
+          const charactersList = document.getElementById('charactersList');
+          const searchBar = document.getElementById('searchBar');
+          let hpCharacters = [];
           
+          searchBar.addEventListener('keyup', (e) => {
+              const searchString = e.target.value.toLowerCase();
+          
+              const filteredCharacters = hpCharacters.filter((character) => {
+                  return (
+                      character.location.formattedAddress.toLowerCase().includes(searchString)
+                      
+                  );
+              });
+              displayCharacters(filteredCharacters);
+          });
+          
+          const loadCharacters = async () => {
+              try {
+                  const res = await fetch('/api-stores');
+                  hpCharacters = await res.json();
+                  displayCharacters(hpCharacters);
+                  console.log(hpCharacters);
+              } catch (err) {
+                  console.error(err);
+              }
+          };
+          
+          const displayCharacters = (characters) => {
+              const htmlString = characters
+                  .map((character) => {
+                      return `
+                      <li class="character">
+                          <p>House: ${character.location.formattedAddress}</p>
+                          <img style="width:300px" src="/images/${character.image}"></img>
+                          
+                      </li>
+                  `;
+                  })
+                  .join('');
+              charactersList.innerHTML = htmlString;
+          };
+          
+          loadCharacters();
+          
+
 
         </script>
 

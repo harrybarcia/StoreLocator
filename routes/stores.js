@@ -30,7 +30,7 @@ router.get('/add',isAuth, adminController.getAddStore);
 router.get('/api-stores', adminController.getStores)
 router.get('/stores-list', adminController.getStoresList)
 router.get('/stores/:storeId', adminController.getStore);
-
+router.get('/products', adminController.getProducts);
 router.get('/edit-store/:storeId',isAuth,upload, adminController.getEditStore);
 
 router.post('/edit-store',isAuth, upload, adminController.postEditStore);

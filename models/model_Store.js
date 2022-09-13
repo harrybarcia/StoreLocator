@@ -20,7 +20,8 @@ const StoreSchema=new Schema(
           default:Date.now
       },
       image:String,
-      userId: {type: Schema.Types.ObjectId, ref: 'model_User'}
+      userId: {type: Schema.Types.ObjectId, ref: 'model_User'},
+      city:String,
 
     });
 
