@@ -3,11 +3,13 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiaGFycnliYXJjaWEiLCJhIjoiY2s3dzRvdTJnMDBqODNlb
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
-  zoom: 11,
+  zoom: 9,
   center: [-123.1, 49.25]
   
   
 });
+
+
 map.addControl(
   new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
@@ -17,7 +19,7 @@ map.addControl(
   
 // Fetch stores from API
 async function getStores() {
-  const res = await fetch('/products');
+  const res = await fetch('/api-stores');
   const data = await res.json();
   console.log('data');
   console.log(data);
@@ -73,6 +75,88 @@ function loadMap(stores) {
         'text-anchor': 'top'
       }
     });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        map.flyTo({
+          center: [position.coords.longitude,position.coords.latitude
+          ],
+          essential: true // this animation is considered essential with respect to prefers-reduced-motion
+       });
+      });
+    }
+  
+    // Add a data source containing GeoJSON data.
+    
+      map.addSource('maine', {
+        'type': 'geojson',
+        
+        'data': {
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Polygon',
+            'coordinates': [
+              [  
+                [-123.11, 49.36],
+                [-123.05, 49.36],
+                [-123.05, 49.33],
+                [-123.11, 49.33],
+                [-123.11, 49.36]
+              ]
+            ]
+          }
+        }
+      });
+      // Add a black outline around the polygon.
+    map.addLayer({
+      'id': 'outline',
+      'type': 'line',
+      'source': 'maine',
+      'layout': {},
+      'paint': {
+      'line-color': '#000',
+      'line-width': 3
+      }
+    });
+    // Add a new layer to visualize the polygon.
+    map.addLayer({
+      'id': 'maine',
+      'type': 'fill',
+      'source': 'maine', // reference the data source
+      'layout': {},
+      'paint': {
+      'fill-color': '#0080ff', // blue color fill
+      'fill-opacity': 0.5
+      }
+    });
+    
+    
+      map.addSource('urban', {
+        'type': 'geojson',
+        
+        'data': '/data/urban.json'
+      });
+  
+      map.addLayer({
+        'id': 'urban',
+        'type': 'fill',
+        'source': 'urban', // reference the data source
+        'layout': {},
+        'paint': {
+  
+        'fill-color': '#0080ff', // blue color fill
+        'fill-opacity': 0.5
+        }
+      });
+      map.addLayer({
+        'id': '_urban',
+        'type': 'line',
+        'source': 'urban',
+        'layout': {},
+        'paint': {
+        'line-color': '#000',
+        'line-width': 3
+        }
+      });
   });
 }
 getStores();
@@ -138,60 +222,7 @@ map.on('mousemove', (e) => {
   JSON.stringify(e.lngLat.wrap());
   });
   
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      map.flyTo({
-        center: [position.coords.longitude,position.coords.latitude
-        ],
-        essential: true // this animation is considered essential with respect to prefers-reduced-motion
-     });
-    });
-  }
-
-          // Add a new layer to visualize the polygon.
-          map.addLayer({
-            'id': 'maine',
-            'type': 'fill',
-            'source': 'maine', // reference the data source
-            'layout': {},
-            'paint': {
-            'fill-color': '#0080ff', // blue color fill
-            'fill-opacity': 0.5
-            }
-          });
-            // Add a black outline around the polygon.
-          map.addLayer({
-            'id': 'outline',
-            'type': 'line',
-            'source': 'maine',
-            'layout': {},
-            'paint': {
-            'line-color': '#000',
-            'line-width': 3
-            }
-          });
-        
-
-            // Add a data source containing GeoJSON data.
-    map.addSource('maine', {
-      'type': 'geojson',
-      
-      'data': {
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Polygon',
-          'coordinates': [
-            [  
-              [-123.11, 49.36],
-              [-123.05, 49.36],
-              [-123.05, 49.33],
-              [-123.11, 49.33],
-              [-123.11, 49.36]
-            ]
-          ]
-        }
-      }
-    });
+  
   
 //   const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
 // async function getISS() {

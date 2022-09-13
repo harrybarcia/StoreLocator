@@ -65,10 +65,11 @@ exports.addStore=async  (req, res, next)=>{
   const image = req.file.filename;
   const storeId = new mongodb.ObjectId();
   const userId = req.user._id;
+  const city = req.body.city;
 
         const store=await new Store({
           storeId:storeId,
-          address: address, image:image, userId:userId});
+          address, image, userId, city});
         store
         .save()
         .then(results => {
@@ -118,6 +119,7 @@ exports.postEditStore = (req, res, next) => {
   const storeId = req.body.storeId;
   const updatedAddress = req.body.address;
   const updatedImage = req.file.filename;
+  const updatedCity = req.body.city;
 
 
   Store.findById(storeId)
@@ -127,6 +129,7 @@ exports.postEditStore = (req, res, next) => {
       // }
       store.address = updatedAddress;
       store.image = updatedImage;
+      store.city = updatedCity;
       return store.save()
     .then(result => {
       console.log('UPDATED PRODUCT!');

@@ -18,8 +18,15 @@
         </div>
         <label for="image">Image</label>
         <input type="file" id="image" name="image" value="<% if (editing) { %><%= store.image %><% } %>"/> 
+        
+        <label for="city">City</label>
+        <input type="text" id="store-city" class="form-control" name="city" value="<% if (editing) { %><%= store.city %><% } %>" />
+
         <% if (editing) { %>
           <input type="hidden" value="<%= store._id %>" name="storeId">
+
+
+          
       <% } %>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
