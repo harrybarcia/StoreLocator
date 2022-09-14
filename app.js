@@ -106,11 +106,6 @@ app.use(storesRoutes);
 // });
 
 
-app.get('/', function (req, res) {
-  res.render('pages/index', {
-    pageTitle: 'Store Locator | Home',
-    path: '/' });
-});
 
 
 
@@ -122,7 +117,7 @@ mongoose
   //   console.log('Connected!');
   //   https.createServer({key:privateKey, cert:certificate}, app).listen(3000);
   // })
-  app.listen(3001);
+  app.listen(3000);
   })
   .catch(err => {
     console.log(err);

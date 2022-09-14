@@ -1,21 +1,28 @@
 const Store=require('../models/model_Store')
 const mongodb=require('mongodb');
+// const { json } = require('body-parser');
+const stores_json = require('../public/data/stores.json');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 
 exports.getStoresList = (req, res, next) => {
-  Store.find({ userId: req.user._id })
+  Store.find({userId: req.user._id})
+
     .then(stores => {
-      console.log(stores);
+    
       res.render('stores/stores-list', {
         prods: stores,
         pageTitle: 'All stores',
         path: '/stores-list',
       });
+      
     })
     .catch(err => {
       console.log(err);
     });
 };
+
+
 
 exports.getStore = (req, res, next) => {
   console.log('heree');
@@ -140,15 +147,48 @@ exports.getStores = async (req, res, next) => {
   try{
   const re = new RegExp("[a-zA-Z0-9]");
   const city = req.query.city?req.query.city:re;
-  const stores = await Store.find({ city: city, userId: req.user._id })
-  console.log('stores', stores);
+  const user = req.user?req.user:null;
+  if (!city){
+    const stores = await Store.find({userId: req.user._id});
     res.render('pages/index', {
       pageTitle: 'Store Locator | Home',
-      path: '/api-store',
+      path: '/',
       prods: stores,
       csrfToken:req.csrfToken()
     });
+  }
+  if (!user){
+    res.render('pages/index', {
+      pageTitle: 'Store Locator | Home',
+      path: '/',
+      prods: [],
+      csrfToken:req.csrfToken()
+    });
+  }
+   else{
+  const stores = await Store.find({ city: city, userId: req.user._id })
+    res.render('pages/index', {
+    pageTitle: 'Store Locator | Home',
+    path: '/api-store',
+    prods: stores,
+    csrfToken:req.csrfToken()
+
+  });
+}
+
   }catch(err){
     console.log(err);
   }
 };
+
+
+exports.test = async  (req, res, next) => {
+  const ress = await fetch("http://localhost:3000/stores-list");
+  const data = await ress.json();
+  res.json(data);  
+};
+exports.test_json =  (req, res, next) => {
+  res.status(200).json(stores_json);
+
+};
+

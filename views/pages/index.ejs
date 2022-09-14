@@ -45,11 +45,19 @@
 
   
   <div class="container">
-    
+    <% if (Object.keys(prods).length === 0) { %> 
+      <p> No stores found </p>
+      <% } %>
     <form method="GET" action = "./api-stores">
       <input  type="text" placeholder="Search a Store..."  name="city">
       <button class="btn btn-primary">Go</button>
 
+    
+      
+  </form>
+
+  <form action="/test">
+    <button class="btn btn-primary">Go</button>
   </form>
 
           <div
