@@ -1,15 +1,17 @@
 
+
+const data = JSON.parse($('#variableJSON').text());
+
+
 mapboxgl.accessToken = 'pk.eyJ1IjoiaGFycnliYXJjaWEiLCJhIjoiY2s3dzRvdTJnMDBqODNlbzhpcjdmaGxldiJ9.vg2wE4S7o_nryVx8IFIOuQ';
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
-  zoom: 9,
+  zoom: 11,
   center: [-123.1, 49.25]
   
   
 });
-
-
 map.addControl(
   new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
@@ -18,12 +20,11 @@ map.addControl(
   );
   
 // Fetch stores from API
-async function getStores() {
-  const res = await fetch('/api-stores');
-  const data = await res.json();
-  console.log('data');
-  console.log(data);
+  function getStores() {
+  
+
 try{
+  console.log("data", data);
   const stores = data.map(store => {
     return {
 
@@ -75,95 +76,9 @@ function loadMap(stores) {
         'text-anchor': 'top'
       }
     });
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        map.flyTo({
-          center: [position.coords.longitude,position.coords.latitude
-          ],
-          essential: true // this animation is considered essential with respect to prefers-reduced-motion
-       });
-      });
-    }
-  
-    // Add a data source containing GeoJSON data.
-    
-      map.addSource('maine', {
-        'type': 'geojson',
-        
-        'data': {
-          'type': 'Feature',
-          'geometry': {
-            'type': 'Polygon',
-            'coordinates': [
-              [  
-                [-123.11, 49.36],
-                [-123.05, 49.36],
-                [-123.05, 49.33],
-                [-123.11, 49.33],
-                [-123.11, 49.36]
-              ]
-            ]
-          }
-        }
-      });
-      // Add a black outline around the polygon.
-    map.addLayer({
-      'id': 'outline',
-      'type': 'line',
-      'source': 'maine',
-      'layout': {},
-      'paint': {
-      'line-color': '#000',
-      'line-width': 3
-      }
-    });
-    // Add a new layer to visualize the polygon.
-    map.addLayer({
-      'id': 'maine',
-      'type': 'fill',
-      'source': 'maine', // reference the data source
-      'layout': {},
-      'paint': {
-      'fill-color': '#0080ff', // blue color fill
-      'fill-opacity': 0.5
-      }
-    });
-    
-    
-      map.addSource('urban', {
-        'type': 'geojson',
-        
-        'data': '/data/urban.json'
-      });
-  
-      map.addLayer({
-        'id': 'urban',
-        'type': 'fill',
-        'source': 'urban', // reference the data source
-        'layout': {},
-        'paint': {
-  
-        'fill-color': '#0080ff', // blue color fill
-        'fill-opacity': 0.5
-        }
-      });
-      map.addLayer({
-        'id': '_urban',
-        'type': 'line',
-        'source': 'urban',
-        'layout': {},
-        'paint': {
-        'line-color': '#000',
-        'line-width': 3
-        }
-      });
   });
 }
 getStores();
-
-
-
-
 map.on('click', 'points', (e) => {
   // Copy coordinates array.
   const coordinates = e.features[0].geometry.coordinates.slice();
@@ -172,14 +87,14 @@ map.on('click', 'points', (e) => {
   const storeId = e.features[0].properties._id;
   const userId = e.features[0].properties.userId;
   const city = e.features[0].properties.city;
-   console.log(e.features);
+    console.log(e.features);
   // Ensure that if the map is zoomed out such that multiple
   // copies of the feature are visible, the popup appears
   // over the copy being pointed to.
   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
   coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
   }
-   
+    
   new mapboxgl.Popup()
   .setLngLat(coordinates)
   .setHTML(`
@@ -212,101 +127,51 @@ map.on('click', 'points', (e) => {
 });
 
 
-map.on('mousemove', (e) => {
-  document.getElementById('info').innerHTML =
-  // `e.point` is the x, y coordinates of the `mousemove` event
-  // relative to the top-left corner of the map.
-  JSON.stringify(e.point) +
-  '<br />' +
-  // `e.lngLat` is the longitude, latitude geographical position of the event.
-  JSON.stringify(e.lngLat.wrap());
-  });
-  
-  
-  
-//   const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
-// async function getISS() {
-//   const res = await fetch(api_url);
-//   const data = await res.json();
-//   console.log(data);
-//   const {latitude, longitude} = data;
-//   console.log(latitude, longitude);
-//   // Create a popup, but don't add it to the map yet.
-  
-//   var marker = new mapboxgl.Marker({ color: 'green' })
-//   marker.setLngLat([longitude, latitude])
 
-//   marker.setPopup(marker.setHTML("<h1>Hello World!</h1><img id= 'myImg' style = height = '100%' width = '100%' src = 'somePicture.jpeg' > </img>"))
 
-//   marker.addTo(map);
-  
-//   ;
+const charactersList = document.getElementById('charactersList');
+const searchBar = document.getElementById('searchBar');
+let hpCharacters = [];
 
-  
-// }
-// getISS();
+searchBar.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
 
-// setInterval(getISS, 1000);
+    const filteredCharacters = hpCharacters.filter((character) => {
+        return (
+            character.location.formattedAddress.toLowerCase().includes(searchString)
+            
+        );
+    });
+    displayCharacters(filteredCharacters);
+});
 
-// map.on('load', async () => {
-//   // Get the initial location of the International Space Station (ISS).
-//   console.log("1")
+const loadCharacters = async () => {
+    try {
+        const res = await fetch('/api-stores');
+        hpCharacters = await res.json();
+        displayCharacters(hpCharacters);
+        console.log(hpCharacters);
+    } catch (err) {
+        console.error(err);
+    }
+};
 
-//   const geojson = await getLocation();
-  
-//   // Add the ISS location as a source.
-//   map.addSource('iss', {
-//     type: 'geojson',
-//   data: geojson
-// });
-// // Add the rocket symbol layer to the map.
-//   map.addLayer({
-//   'id': 'iss',
-//   'type': 'symbol',
-//   'source': 'iss',
-//   'layout': {
-//     'icon-image': 'rocket-15'
-//   }
-//   });
-   
-  // Update the source from the API every 2 seconds.
-  // const updateSource = setInterval(async () => {
-  // const geojson = await getLocation(updateSource);
-  // map.getSource('iss').setData(geojson);
-  // }, 50000);
-  
-  
-  // async function getLocation(updateSource) {
-  //   console.log("3")
-  // // Make a GET request to the API and return the location of the ISS.
-  // try {
-  // const response = await fetch(
-  // 'https://api.wheretheiss.at/v1/satellites/25544',
-  // { method: 'GET' }
-  // );
-  // const { latitude, longitude } = await response.json();
-  // // Fly the map to the location.
-  // map.flyTo({
-  // center: [longitude, latitude],
-  // speed: 0.5
-  // });
-  // // Return the location of the ISS as GeoJSON.
-  // return {
-  // 'type': 'FeatureCollection',
-  // 'features': [
-  // {
-  // 'type': 'Feature',
-  // 'geometry': {
-  // 'type': 'Point',
-  // 'coordinates': [longitude, latitude]
-  // }
-  // }
-  // ]
-  // };
-  // } catch (err) {
-  // // If the updateSource interval is defined, clear the interval to stop updating the source.
-  // if (updateSource) clearInterval(updateSource);
-  // throw new Error(err);
-  // }
-  // }
-  // });
+const displayCharacters = (characters) => {
+    const htmlString = characters
+        .map((character) => {
+            return `
+            <li class="character">
+                <p>House: ${character.location.formattedAddress}</p>
+                <img style="width:300px" src="/images/${character.image}"></img>
+                
+            </li>
+        `;
+        })
+        .join('');
+    charactersList.innerHTML = htmlString;
+};
+
+loadCharacters();
+
+
+

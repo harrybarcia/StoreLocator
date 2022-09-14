@@ -1,21 +1,6 @@
 const Store=require('../models/model_Store')
 const mongodb=require('mongodb');
-// @desc Get all stores
-// @route GET /api-stores
-// @access Public
 
-
-exports.getStores = (req, res, next) => {
-  
-  Store.find({ userId: req.user._id })
-    .then(stores => {
-      
-      return res.status(200).json(stores);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-};
 
 exports.getStoresList = (req, res, next) => {
   Store.find({ userId: req.user._id })
@@ -150,25 +135,19 @@ exports.deleteStore = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.getProducts = async (req, res, next) => {
+exports.getStores = async (req, res, next) => {
   
   try{
-  const city = req.query.city
-  if (city !== undefined) {
-    const city = req.query.city.toLowerCase();
-    const stores = await Store.find({ city: city, userId: req.user._id })
-    console.log(stores);
-    res.render('pages/selection', {
+  const re = new RegExp("[a-zA-Z0-9]");
+  const city = req.query.city?req.query.city:re;
+  const stores = await Store.find({ city: city, userId: req.user._id })
+  console.log('stores', stores);
+    res.render('pages/index', {
       pageTitle: 'Store Locator | Home',
-      path: '/products',
+      path: '/api-store',
       prods: stores,
       csrfToken:req.csrfToken()
     });
-  } else {
-    
-    const stores = await Store.find({ userId: req.user._id })
-    return res.status(200).json(stores);
-  }
   }catch(err){
     console.log(err);
   }

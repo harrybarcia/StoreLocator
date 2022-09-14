@@ -13,23 +13,27 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 </head>
 <body>
   <style type="text/css">
     #info {
-    display: table;
-    position: relative;
-    margin: 0px auto;
-    word-wrap: anywhere;
-    white-space: pre-wrap;
-    padding: 10px;
-    border: none;
-    border-radius: 3px;
-    font-size: 12px;
-    text-align: center;
-    color: #222;
-    background: #fff;
+      display: table;
+      position: relative;
+      margin: 0px auto;
+      word-wrap: anywhere;
+      white-space: pre-wrap;
+      padding: 10px;
+      border: none;
+      border-radius: 3px;
+      font-size: 12px;
+      text-align: center;
+      color: #222;
+      background: #fff;
     }
     </style>
   <main>
@@ -42,17 +46,10 @@
   
   <div class="container">
     
-    <div id="searchWrapper">
-        <input
-            type="text"
-            name="searchBar"
-            id="searchBar"
-            placeholder="search for a character"
-        />
-    </div>
-    <form class="search" method="GET" action = "./products">
-      <input class="bar" type="text" placeholder="Search Restaurant..."  name="city">
-      <button><i class="fas fa-search"></i>Search a city</button>
+    <form method="GET" action = "./api-stores">
+      <input  type="text" placeholder="Search a Store..."  name="city">
+      <button class="btn btn-primary">Go</button>
+
   </form>
 
           <div
@@ -63,56 +60,10 @@
       </div>
   
   
-        <script src="js/map.js"></script>
+      <span id='variableJSON' hidden><%= JSON.stringify(prods); %></span>
+     <script src="./js/map.js"></script>
         <script src="js/geolocation.js"></script>
-        <script>
-          const charactersList = document.getElementById('charactersList');
-          const searchBar = document.getElementById('searchBar');
-          let hpCharacters = [];
-          
-          searchBar.addEventListener('keyup', (e) => {
-              const searchString = e.target.value.toLowerCase();
-          
-              const filteredCharacters = hpCharacters.filter((character) => {
-                  return (
-                      character.location.formattedAddress.toLowerCase().includes(searchString)
-                      
-                  );
-              });
-              displayCharacters(filteredCharacters);
-          });
-          
-          const loadCharacters = async () => {
-              try {
-                  const res = await fetch('/api-stores');
-                  hpCharacters = await res.json();
-                  displayCharacters(hpCharacters);
-                  console.log(hpCharacters);
-              } catch (err) {
-                  console.error(err);
-              }
-          };
-          
-          const displayCharacters = (characters) => {
-              const htmlString = characters
-                  .map((character) => {
-                      return `
-                      <li class="character">
-                          <p>House: ${character.location.formattedAddress}</p>
-                          <img style="width:300px" src="/images/${character.image}"></img>
-                          
-                      </li>
-                  `;
-                  })
-                  .join('');
-              charactersList.innerHTML = htmlString;
-          };
-          
-          loadCharacters();
-          
-
-
-        </script>
+        
 
 
   </main>  
