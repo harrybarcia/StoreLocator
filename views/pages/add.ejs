@@ -2,8 +2,16 @@
 <%- include('../includes/head.ejs') %>
 
     <title>Store Locator - Add Store</title>
+    <link href="https://api.mapbox.com/mapbox-assembly/v1.3.0/assembly.min.css" rel="stylesheet">
+<script id="store-address" defer="" src="https://api.mapbox.com/search-js/v1.0.0-beta.13/web.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
   </head>
   <body>
+    <style>
+      .hide {
+        display: none;
+        }
+    </style>
     <%- include('../includes/navigation.ejs') %>
 
     <div class="container my-3">
@@ -14,14 +22,44 @@
         <div class="form-group">
 
           <label for="store-address">Store Address</label>
-          <input type="text" id="store-address" class="form-control" name="address" value="<% if (editing) { %><%= store.location.formattedAddress %><% } %>" />
+          
         </div>
         <label for="image">Image</label>
         <input type="file" id="image" name="image" value="<% if (editing) { %><%= store.image %><% } %>"/> 
         
         <label for="city">City</label>
         <input type="text" id="store-city" class="form-control" name="city" value="<% if (editing) { %><%= store.city %><% } %>" />
+        <input type="text" id="test" class="form-control" />
+        
+        
+          <div class="grid grid--gut24 mb60">
+          <div class="col col--auto-mm w-full">
+           
+          <!-- Input form -->
+          <label>Address</label>
+          <div id="geocoder">
+          </div>
+          <input style = "width:400px" type="text" class="form-control" id="address" name="address" >
+          
 
+          </div>
+          </div>
+          <div class="col col--auto-mm">
+          <!-- Visual confirmation map -->
+          <div id="minimap-container" class="none h240 w360 relative mt18"></div>
+          </div>
+          </div>
+           
+          <!-- Form buttons -->
+          <div class="mb30 submit-btns hide">
+
+          <button type="submit" class="btn round btn--gray-light" id="btn-reset" ><% if (editing) { %>Update Product<% } else { %>Add Product<% } %>
+          </button>
+          </div>
+          
+           
+          <div id="validation-msg" class="mt24 txt-m txt-bold none">Test</div>
+        
         <% if (editing) { %>
           <input type="hidden" value="<%= store._id %>" name="storeId">
 
@@ -34,6 +72,36 @@
         <a href="/" class="btn btn-secondary">Back</a>
       </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1IjoiaGFycnliYXJjaWEiLCJhIjoiY2s3dzRvdTJnMDBqODNlbzhpcjdmaGxldiJ9.vg2wE4S7o_nryVx8IFIOuQ';
 
+        // Handle form
+        const geocoder = new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+      });
+
+      geocoder.addTo('#geocoder');
+
+      var geocoderResult = {};
+      geocoder.on('result', (e) => {
+        console.log("result", e.result);
+          geocoderResult = e.result, null, 2;
+      });
+
+      // Clear results container when search is cleared.
+      geocoder.on('clear', () => {
+          geocoderResult = {};
+      });
+      document.getElementById('store-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          document.getElementById('address').value = JSON.stringify(geocoderResult.place_name);
+          document.getElementById('store-form').submit();
+      });
+
+      </script>
   </body>
 </html>

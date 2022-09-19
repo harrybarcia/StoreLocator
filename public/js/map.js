@@ -21,37 +21,35 @@ map.addControl(
   
 // Fetch stores from API
   function getStores() {
-  
+    try{
+      console.log("data", data);
+      const stores = data.map(store => {
+        return {
 
-try{
-  console.log("data", data);
-  const stores = data.map(store => {
-    return {
-
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [
-          store.location.coordinates[0],
-          store.location.coordinates[1]
-        ]
-      },
-      properties: {
-        _id: store._id,
-        storeId: store.storeId,
-        formattedAddress:store.location.formattedAddress,  
-        icon: 'shop',
-        image:store.image,
-        userId:store.userId,
-        city:store.city
-      }
-    };
-  });
-  loadMap(stores);
-}
-catch(err){
-  console.log(err);
-}
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [
+              store.location.coordinates[0],
+              store.location.coordinates[1]
+            ]
+          },
+          properties: {
+            _id: store._id,
+            storeId: store.storeId,
+            formattedAddress:store.location.formattedAddress,  
+            icon: 'shop',
+            image:store.image,
+            userId:store.userId,
+            city:store.city
+          }
+        };
+      });
+      loadMap(stores);
+    }
+    catch(err){
+      console.log(err);
+    }
 }
 
 // Load map with stores

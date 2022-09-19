@@ -24,6 +24,7 @@ exports.getStoresList = (req, res, next) => {
 
 
 
+
 exports.getStore = (req, res, next) => {
   console.log('heree');
   console.log(req.params);
@@ -157,14 +158,7 @@ exports.getStores = async (req, res, next) => {
       csrfToken:req.csrfToken()
     });
   }
-  if (!user){
-    res.render('pages/index', {
-      pageTitle: 'Store Locator | Home',
-      path: '/',
-      prods: [],
-      csrfToken:req.csrfToken()
-    });
-  }
+
    else{
   const stores = await Store.find({ city: city, userId: req.user._id })
     res.render('pages/index', {
@@ -181,14 +175,7 @@ exports.getStores = async (req, res, next) => {
   }
 };
 
-
-exports.test = async  (req, res, next) => {
-  const ress = await fetch("http://localhost:3000/stores-list");
-  const data = await ress.json();
-  res.json(data);  
-};
-exports.test_json =  (req, res, next) => {
-  res.status(200).json(stores_json);
-
-};
-
+exports.getStoresJson = async (req, res, next) => {
+  const stores = await Store.find({userId: req.user._id});
+  res.status(200).json(stores);
+}
