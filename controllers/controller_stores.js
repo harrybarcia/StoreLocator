@@ -66,14 +66,9 @@ exports.addStore=async  (req, res, next)=>{
         store
         .save()
         .then(results => {
-          
-          res.render('pages/index', {
-            pageTitle: 'Store Locator | Home',
-            path: '/' ,
-            prods: results,
-          csrfToken:req.csrfToken(),
-
-        })
+          console.log(results);
+          console.log('Created Store');
+          res.redirect('/');
         })
           .catch (err=>{
             console.error(err);
@@ -175,7 +170,3 @@ exports.getStores = async (req, res, next) => {
   }
 };
 
-exports.getStoresJson = async (req, res, next) => {
-  const stores = await Store.find({userId: req.user._id});
-  res.status(200).json(stores);
-}

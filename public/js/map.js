@@ -124,52 +124,26 @@ map.on('click', 'points', (e) => {
   .addTo(map);
 });
 
-
-
-
-const charactersList = document.getElementById('charactersList');
-const searchBar = document.getElementById('searchBar');
-let hpCharacters = [];
-
-searchBar.addEventListener('keyup', (e) => {
-    const searchString = e.target.value.toLowerCase();
-
-    const filteredCharacters = hpCharacters.filter((character) => {
-        return (
-            character.location.formattedAddress.toLowerCase().includes(searchString)
-            
-        );
+map.on('style.load', function() {
+    map.on('click', function(e) {
+      console.log(e);
+      const coordinates = e.lngLat;
+      const arrayCoordinates = [coordinates.lng, coordinates.lat];
+      data.map(store => {
+        const mystore = store.location.coordinates;
+        const distance = turf.distance(
+          turf.point(arrayCoordinates),
+          turf.point(mystore),
+          {units: 'meters'}
+          );
+        new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML('This store is: <br/>' + distance + ' meters away')
+        .addTo(map);
     });
-    displayCharacters(filteredCharacters);
+  });
 });
 
-const loadCharacters = async () => {
-    try {
-        const res = await fetch('/api-stores');
-        hpCharacters = await res.json();
-        displayCharacters(hpCharacters);
-        console.log(hpCharacters);
-    } catch (err) {
-        console.error(err);
-    }
-};
-
-const displayCharacters = (characters) => {
-    const htmlString = characters
-        .map((character) => {
-            return `
-            <li class="character">
-                <p>House: ${character.location.formattedAddress}</p>
-                <img style="width:300px" src="/images/${character.image}"></img>
-                
-            </li>
-        `;
-        })
-        .join('');
-    charactersList.innerHTML = htmlString;
-};
-
-loadCharacters();
 
 
 

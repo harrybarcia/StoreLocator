@@ -15,61 +15,21 @@
     <%- include('../includes/navigation.ejs') %>
 
     <div class="container my-3">
-
-      <form id="store-form" class="mb-4" action="/<% if (editing) { %>edit-store<% } else { %>add-store<% } %>?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
-
-        
-        <div class="form-group">
-
-          <label for="store-address">Store Address</label>
-          
+      <form id="store-form" action="/<% if (editing) { %>edit-store<% } else { %>add-store<% } %>?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
+        <div id="geocoder">
+          </div>
+            <input style = "width:400px" type="hidden" class="form-control" id="address" name="address" placeholder="Add an address"  >       
+          </div>
         </div>
+        <label for="city"></label>  
+        <input type="text" placeholder="city" id="store-city" class="form-control" name="city" value="<% if (editing) { %><%= store.city %><% } %>" />
         <label for="image">Image</label>
         <input type="file" id="image" name="image" value="<% if (editing) { %><%= store.image %><% } %>"/> 
-        
-        <label for="city">City</label>
-        <input type="text" id="store-city" class="form-control" name="city" value="<% if (editing) { %><%= store.city %><% } %>" />
-        <input type="text" id="test" class="form-control" />
-        
-        
-          <div class="grid grid--gut24 mb60">
-          <div class="col col--auto-mm w-full">
-           
-          <!-- Input form -->
-          <label>Address</label>
-          <div id="geocoder">
-          </div>
-          <input style = "width:400px" type="text" class="form-control" id="address" name="address" >
-          
-
-          </div>
-          </div>
-          <div class="col col--auto-mm">
-          <!-- Visual confirmation map -->
-          <div id="minimap-container" class="none h240 w360 relative mt18"></div>
-          </div>
-          </div>
-           
-          <!-- Form buttons -->
-          <div class="mb30 submit-btns hide">
-
-          <button type="submit" class="btn round btn--gray-light" id="btn-reset" ><% if (editing) { %>Update Product<% } else { %>Add Product<% } %>
-          </button>
-          </div>
-          
-           
-          <div id="validation-msg" class="mt24 txt-m txt-bold none">Test</div>
-        
         <% if (editing) { %>
           <input type="hidden" value="<%= store._id %>" name="storeId">
-
-
-          
-      <% } %>
+        <% } %>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-
-      <button class="btn" type="submit"><% if (editing) { %>Update Product<% } else { %>Add Product<% } %></button>
-        <a href="/" class="btn btn-secondary">Back</a>
+        <button type="submit" class="btn btn-primary"><% if (editing) { %>Update Product<% } else { %>Add Product<% } %></button>
       </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

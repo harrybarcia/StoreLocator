@@ -28,7 +28,6 @@ const upload=multer({storage:fileStorage}).single('image');
 router.get ('/', adminController.getStores);
 router.get('/add',isAuth, adminController.getAddStore);
 router.get('/api-stores', adminController.getStores)
-router.get('/api-storesJson', adminController.getStoresJson)
 router.get('/stores-list', adminController.getStoresList)
 router.get('/stores/:storeId', adminController.getStore);
 router.get('/edit-store/:storeId',isAuth,upload, adminController.getEditStore);
