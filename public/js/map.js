@@ -12,12 +12,14 @@ const map = new mapboxgl.Map({
   
   
 });
-map.addControl(
-  new MapboxGeocoder({
-  accessToken: mapboxgl.accessToken,
-  mapboxgl: mapboxgl
-  })
-  );
+const geocoder = new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken, // Set the access token
+  mapboxgl: mapboxgl, // Set the mapbox-gl instance
+  marker: true, // Use the geocoder's default marker style
+  
+});
+
+map.addControl(geocoder, 'top-left');
   
 // Fetch stores from API
   function getStores() {
@@ -129,13 +131,17 @@ map.on('click', 'points', (e) => {
 
 // I retrieve all the distances from the point I just clicked
     map.on('click', function(e) {
+      
       console.log(e);
       const coordinates = e.lngLat;
       new mapboxgl.Popup()
-        .setLngLat(coordinates)
-        .setHTML('Your destination!')
-        .addTo(map);
+      .setLngLat(coordinates)
+      .setHTML(`
+        <div>You clicked here</div>
+        `)
+      .addTo(map);
 
+      
       const arrayCoordinates = [coordinates.lng, coordinates.lat];
       const stores = data.map(store => {
         const mystore = store.location.coordinates;
@@ -144,35 +150,67 @@ map.on('click', 'points', (e) => {
           turf.point(mystore),
           {units: 'meters'}
           ));
-          const listings = document.getElementById('listings');
-          const listing = listings.appendChild(document.createElement('div'));
-          const details = listing.appendChild(document.createElement('div'));
-          details.innerHTML = `${store.city}, ${store.location.formattedAddress}`;
-          details.innerHTML += `<div><strong>${distance} meters away</strong></div>`;
-
-
+        store.distance = distance;
+        return store; 
         });
-  });
+        console.log("stores", stores);
+        stores.sort((a, b) => {
+        if (a.distance > b.distance) {
+          return 1;
+        }
+        if (a.distance < b.distance) {
+          return -1;
+        }
+        return 0; // a must be equal to b
+      });
 
-  function addMarkers() {
-    /* For each feature in the GeoJSON object above: */
-    for (const marker of stores.features) {
-      /* Create a div element for the marker. */
-      const el = document.createElement('div');
-      /* Assign a unique `id` to the marker. */
-      el.id = `marker-${marker.properties.id}`;
-      /* Assign the `marker` class to each marker for styling. */
-      el.className = 'marker';
-  
-      /**
-       * Create a marker using the div element
-       * defined above and add it to the map.
-       **/
-      new mapboxgl.Marker(el, { offset: [0, -23] })
-        .setLngLat(marker.geometry.coordinates)
-        .addTo(map);
-    }
-  }
+      const listings = document.getElementById('listings');
+      listings.innerHTML = '';
+      for (let i = 0; i < stores.length; i++) {
+        
+        const listings = document.getElementById('listings');
+        const listing = listings.appendChild(document.createElement('div'));
 
+        const details = listing.appendChild(document.createElement('div'));
+        details.innerHTML = `${stores[i].city}, ${stores[i].location.formattedAddress}`;
+        details.innerHTML += `<div><strong>${stores[i].distance} meters away</strong></div>`;
+      }
+    });
 
+    geocoder.on('result', (event) => {
+      const searchResult = event.result.geometry;
+      const coordinates = searchResult.coordinates;
+      const arrayCoordinates = [coordinates[0], coordinates[1]];
+      const stores = data.map(store => {
+        const mystore = store.location.coordinates;
+        const distance = Math.round(turf.distance(
+          turf.point(arrayCoordinates),
+          turf.point(mystore),
+          {units: 'meters'}
+          ));
+        store.distance = distance;
+        return store; 
+        });
+        console.log("stores", stores);
+        stores.sort((a, b) => {
+        if (a.distance > b.distance) {
+          return 1;
+        }
+        if (a.distance < b.distance) {
+          return -1;
+        }
+        return 0; // a must be equal to b
+      });
 
+      const listings = document.getElementById('listings');
+      listings.innerHTML = '';
+      for (let i = 0; i < stores.length; i++) {
+        
+        const listings = document.getElementById('listings');
+        const listing = listings.appendChild(document.createElement('div'));
+
+        const details = listing.appendChild(document.createElement('div'));
+        details.innerHTML = `${stores[i].city}, ${stores[i].location.formattedAddress}`;
+        details.innerHTML += `<div><strong>${stores[i].distance} meters away</strong></div>`;
+      }
+    });
