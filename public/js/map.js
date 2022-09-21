@@ -45,6 +45,7 @@ map.addControl(
           }
         };
       });
+      console.log("stores", stores);
       loadMap(stores);
     }
     catch(err){
@@ -75,6 +76,8 @@ function loadMap(stores) {
       }
     });
   });
+  
+
 }
 getStores();
 map.on('click', 'points', (e) => {
@@ -124,26 +127,52 @@ map.on('click', 'points', (e) => {
   .addTo(map);
 });
 
-map.on('style.load', function() {
+// I retrieve all the distances from the point I just clicked
     map.on('click', function(e) {
       console.log(e);
       const coordinates = e.lngLat;
+      new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML('Your destination!')
+        .addTo(map);
+
       const arrayCoordinates = [coordinates.lng, coordinates.lat];
-      data.map(store => {
+      const stores = data.map(store => {
         const mystore = store.location.coordinates;
-        const distance = turf.distance(
+        const distance = Math.round(turf.distance(
           turf.point(arrayCoordinates),
           turf.point(mystore),
           {units: 'meters'}
-          );
-        new mapboxgl.Popup()
-        .setLngLat(coordinates)
-        .setHTML('This store is: <br/>' + distance + ' meters away')
-        .addTo(map);
-    });
-  });
-});
+          ));
+          const listings = document.getElementById('listings');
+          const listing = listings.appendChild(document.createElement('div'));
+          const details = listing.appendChild(document.createElement('div'));
+          details.innerHTML = `${store.city}, ${store.location.formattedAddress}`;
+          details.innerHTML += `<div><strong>${distance} meters away</strong></div>`;
 
+
+        });
+  });
+
+  function addMarkers() {
+    /* For each feature in the GeoJSON object above: */
+    for (const marker of stores.features) {
+      /* Create a div element for the marker. */
+      const el = document.createElement('div');
+      /* Assign a unique `id` to the marker. */
+      el.id = `marker-${marker.properties.id}`;
+      /* Assign the `marker` class to each marker for styling. */
+      el.className = 'marker';
+  
+      /**
+       * Create a marker using the div element
+       * defined above and add it to the map.
+       **/
+      new mapboxgl.Marker(el, { offset: [0, -23] })
+        .setLngLat(marker.geometry.coordinates)
+        .addTo(map);
+    }
+  }
 
 
 
