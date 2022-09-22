@@ -155,7 +155,7 @@ exports.getStores = async (req, res, next) => {
   }
 
    else{
-  const stores = await Store.find({ city: city, userId: req.user._id })
+  const stores = await Store.find({ city: city, userId: user});
     res.render('pages/index', {
     pageTitle: 'Store Locator | Home',
     path: '/api-store',

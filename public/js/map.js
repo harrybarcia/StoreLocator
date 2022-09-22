@@ -2,7 +2,6 @@
 
 const data = JSON.parse($('#variableJSON').text());
 
-
 mapboxgl.accessToken = 'pk.eyJ1IjoiaGFycnliYXJjaWEiLCJhIjoiY2s3dzRvdTJnMDBqODNlbzhpcjdmaGxldiJ9.vg2wE4S7o_nryVx8IFIOuQ';
 const map = new mapboxgl.Map({
   container: 'map',
@@ -12,14 +11,14 @@ const map = new mapboxgl.Map({
   
   
 });
-const geocoder = new MapboxGeocoder({
-  accessToken: mapboxgl.accessToken, // Set the access token
-  mapboxgl: mapboxgl, // Set the mapbox-gl instance
-  marker: true, // Use the geocoder's default marker style
-  
-});
 
-map.addControl(geocoder, 'top-left');
+
+// const directions = 
+//   new MapboxDirections({
+//     accessToken: mapboxgl.accessToken
+//   });
+// map.addControl(directions, 'top-left')
+
   
 // Fetch stores from API
   function getStores() {
@@ -40,7 +39,7 @@ map.addControl(geocoder, 'top-left');
             _id: store._id,
             storeId: store.storeId,
             formattedAddress:store.location.formattedAddress,  
-            icon: 'shop',
+            icon: 'rocket',
             image:store.image,
             userId:store.userId,
             city:store.city
@@ -214,3 +213,24 @@ map.on('click', 'points', (e) => {
         details.innerHTML += `<div><strong>${stores[i].distance} meters away</strong></div>`;
       }
     });
+
+
+        const geocoder = new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+      });
+
+      geocoder.addTo('#geocoder');
+
+      var geocoderResult = {};
+      geocoder.on('result', (e) => {
+          geocoderResult = e.result, null, 2;
+      });
+
+      // Clear results container when search is cleared.
+      geocoder.on('clear', () => {
+          geocoderResult = {};
+      });
+// directions.on('route', function(e) {
+//   console.log(e);
+// });
+
