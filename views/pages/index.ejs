@@ -29,7 +29,7 @@
     
         <div class="flex font-sans">
           <!-- SIDEBAR -->
-          <div class="w-1/5 bg-gray-900 h-screen">
+          <div class="w-1/5 bg-gray-900 h-screen sidebar">
               <!-- LOGO -->
               <div class="flex justify-center pt-8 pb-8 border-b border-b-white">
                 <img src="./mapbox-logo-white.svg" class="h-14" />
@@ -76,7 +76,7 @@
                <div class="mb-6 text-white w-5/6 mx-auto mt-6" >
                    <label for="geocoder" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Event Address</label>
                    <div id="geocoder">
-                     <input id="address" name = "address">
+                     
                    </div>
                </div>
                             
@@ -92,6 +92,7 @@
                </div>
                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                </form>
+               <div id="listings" class="listings"></div>
             <!-- MAP -->
           <div class="h-screen w-full" id="map"></div>
         </div>
@@ -101,7 +102,16 @@
       
       <span id='variableJSON' hidden><%= JSON.stringify(prods); %></span>
       <script>
+        
+        const x = document.createElement("input");
+        x.setAttribute("type", "hidden");
+        x.setAttribute("value", event.result.place_name);
+        x.setAttribute("name", "address");
+        const y = document.getElementById("store-form");
+        y.appendChild(x);
 
+
+        
       </script>
       <script src="./js/map.js"></script>
       <script src="js/geolocation.js"></script>

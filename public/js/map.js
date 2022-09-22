@@ -13,6 +13,8 @@ const map = new mapboxgl.Map({
 });
 
 
+  
+
 // const directions = 
 //   new MapboxDirections({
 //     accessToken: mapboxgl.accessToken
@@ -131,14 +133,22 @@ map.on('click', 'points', (e) => {
 // I retrieve all the distances from the point I just clicked
     map.on('click', function(e) {
       
-      console.log(e);
+      const markers = document.getElementsByClassName("mapboxgl-marker");
+      console.log(markers);
+      if (markers[0]) markers[0].remove();
+      console.log(markers);
       const coordinates = e.lngLat;
-      new mapboxgl.Popup()
+      const marker = new mapboxgl.Marker(
+        {
+          color: "red",
+          draggable: true
+        }
+      )
       .setLngLat(coordinates)
-      .setHTML(`
-        <div>You clicked here</div>
-        `)
       .addTo(map);
+
+
+
 
       
       const arrayCoordinates = [coordinates.lng, coordinates.lat];
@@ -165,6 +175,7 @@ map.on('click', 'points', (e) => {
 
       const listings = document.getElementById('listings');
       listings.innerHTML = '';
+      listings.className = "listings w-1/6 bg-gray-900 h-screen sidebar";
       for (let i = 0; i < stores.length; i++) {
         
         const listings = document.getElementById('listings');
@@ -172,49 +183,13 @@ map.on('click', 'points', (e) => {
 
         const details = listing.appendChild(document.createElement('div'));
         details.innerHTML = `${stores[i].city}, ${stores[i].location.formattedAddress}`;
-        details.innerHTML += `<div><strong>${stores[i].distance} meters away</strong></div>`;
+        details.innerHTML += `<div><strong>${stores[i].distance.toLocaleString('en').replace(/,/g,' ')} meters away</strong></div>`;
+        details.style = "color: white; padding: 20px;";
       }
     });
 
-    geocoder.on('result', (event) => {
-      const searchResult = event.result.geometry;
-      const coordinates = searchResult.coordinates;
-      const arrayCoordinates = [coordinates[0], coordinates[1]];
-      const stores = data.map(store => {
-        const mystore = store.location.coordinates;
-        const distance = Math.round(turf.distance(
-          turf.point(arrayCoordinates),
-          turf.point(mystore),
-          {units: 'meters'}
-          ));
-        store.distance = distance;
-        return store; 
-        });
-        console.log("stores", stores);
-        stores.sort((a, b) => {
-        if (a.distance > b.distance) {
-          return 1;
-        }
-        if (a.distance < b.distance) {
-          return -1;
-        }
-        return 0; // a must be equal to b
-      });
-
-      const listings = document.getElementById('listings');
-      listings.innerHTML = '';
-      for (let i = 0; i < stores.length; i++) {
-        
-        const listings = document.getElementById('listings');
-        const listing = listings.appendChild(document.createElement('div'));
-
-        const details = listing.appendChild(document.createElement('div'));
-        details.innerHTML = `${stores[i].city}, ${stores[i].location.formattedAddress}`;
-        details.innerHTML += `<div><strong>${stores[i].distance} meters away</strong></div>`;
-      }
-    });
-
-
+    
+    
         const geocoder = new MapboxGeocoder({
           accessToken: mapboxgl.accessToken,
       });
@@ -223,14 +198,77 @@ map.on('click', 'points', (e) => {
 
       var geocoderResult = {};
       geocoder.on('result', (e) => {
-          geocoderResult = e.result, null, 2;
+        geocoderResult = e.result, null, 2;
       });
-
+      
       // Clear results container when search is cleared.
       geocoder.on('clear', () => {
-          geocoderResult = {};
+        geocoderResult = {};
       });
-// directions.on('route', function(e) {
-//   console.log(e);
-// });
+      geocoder.on('result', (event) => {
+        
+        const x = document.createElement("input");
+        x.setAttribute("type", "hidden");
+        x.setAttribute("value", event.result.place_name);
+        x.setAttribute("name", "address");
+        const y = document.getElementById("store-form");
+        y.appendChild(x);
+        
 
+        
+      });
+      const resultGeocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+      
+        })
+      
+        map.addControl(resultGeocoder);
+
+      resultGeocoder.on('result', (event) => {
+        const searchResult = event.result.geometry;
+        const coordinates = searchResult.coordinates;
+        const arrayCoordinates = [coordinates[0], coordinates[1]];
+        const stores = data.map(store => {
+          const mystore = store.location.coordinates;
+          const distance = Math.round(turf.distance(
+            turf.point(arrayCoordinates),
+            turf.point(mystore),
+            {units: 'meters'}
+            ));
+          store.distance = distance;
+          return store; 
+          });
+          console.log("stores", stores);
+          stores.sort((a, b) => {
+          if (a.distance > b.distance) {
+            return 1;
+          }
+          if (a.distance < b.distance) {
+            return -1;
+          }
+          return 0; // a must be equal to b
+        });
+    
+        const listings = document.getElementById('listings');
+        
+        listings.innerHTML = '';
+        listings.className = "listings w-1/6 bg-gray-900 h-screen sidebar";
+        const listing = listings.appendChild(document.createElement('div'));
+        for (let i = 0; i < stores.length; i++) {
+          
+          
+          
+          const details = listing.appendChild(document.createElement('div'));
+          details.innerHTML = `${stores[i].city}, ${stores[i].location.formattedAddress}`;
+          details.innerHTML += `<div><strong>${stores[i].distance.toLocaleString('en').replace(/,/g,' ')} meters away</strong></div>`;
+          details.style = "color: white; padding: 20px;";
+        }
+      });
+      
+
+      // directions.on('route', function(e) {
+        //   console.log(e);
+        // });
+        
+        

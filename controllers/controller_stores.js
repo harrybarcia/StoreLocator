@@ -59,7 +59,7 @@ exports.addStore=async  (req, res, next)=>{
   const storeId = new mongodb.ObjectId();
   const userId = req.user._id;
   const city = req.body.city;
-
+  console.log("req", req.body);
         const store=await new Store({
           storeId:storeId,
           address, image, userId, city});
