@@ -185,6 +185,7 @@ map.on('click', 'points', (e) => {
         details.innerHTML = `${stores[i].city}, ${stores[i].location.formattedAddress}`;
         details.innerHTML += `<div><strong>${stores[i].distance.toLocaleString('en').replace(/,/g,' ')} meters away</strong></div>`;
         details.style = "color: white; padding: 20px;";
+        details.innerHTML += `<a href='/stores/${stores[i]._id}' class="btn">Details</a>`;
       }
     });
 
