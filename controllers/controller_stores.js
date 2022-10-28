@@ -2,11 +2,12 @@ const Store=require('../models/model_Store')
 const mongodb=require('mongodb');
 // const { json } = require('body-parser');
 const stores_json = require('../public/data/stores.json');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 
 
 exports.getStoresList = (req, res, next) => {
-  Store.find({userId: req.user._id})
+  // Store.find({userId: req.user._id})
+  Store.find({})
 
     .then(stores => {
     
@@ -14,6 +15,22 @@ exports.getStoresList = (req, res, next) => {
         prods: stores,
         pageTitle: 'All stores',
         path: '/stores-list',
+      });
+      
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+exports.getStoresTest = (req, res, next) => {
+  // Store.find({userId: req.user._id})
+  Store.find({})
+
+    .then(stores => {
+    
+      res.status(200).json({
+        message: 'Success',
+        stores: stores
       });
       
     })
@@ -145,7 +162,7 @@ exports.getStores = async (req, res, next) => {
   const city = req.query.city?req.query.city:re;
   const user = req.user?req.user:null;
   if (!city){
-    const stores = await Store.find({userId: req.user._id});
+    const stores = await Store.find();
     res.render('pages/index', {
       pageTitle: 'Store Locator | Home',
       path: '/',
@@ -155,7 +172,7 @@ exports.getStores = async (req, res, next) => {
   }
 
    else{
-  const stores = await Store.find({ city: city, userId: user});
+  const stores = await Store.find();
     res.render('pages/index', {
     pageTitle: 'Store Locator | Home',
     path: '/api-store',

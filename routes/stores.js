@@ -26,15 +26,16 @@ const fileStorage=multer.diskStorage({
 const upload=multer({storage:fileStorage}).single('image');
 
 router.get ('/', adminController.getStores);
-router.get('/add',isAuth, adminController.getAddStore);
+router.get('/add', adminController.getAddStore);
 router.get('/api-stores', adminController.getStores)
+router.get('/api-storesTest', adminController.getStoresTest)
 router.get('/stores-list', adminController.getStoresList)
 router.get('/stores/:storeId', adminController.getStore);
 router.get('/edit-store/:storeId',isAuth,upload, adminController.getEditStore);
 router.post('/edit-store',isAuth, upload, adminController.postEditStore);
 
 
-router.post('/add-store', isAuth, upload, adminController.addStore)
+router.post('/add-store', upload, adminController.addStore)
 router.post('/delete-store', isAuth, adminController.deleteStore)
 
 

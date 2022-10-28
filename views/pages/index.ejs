@@ -27,7 +27,8 @@
     </style>
       
     
-        <div class="flex font-sans">
+        <div class="flex font-sans" style="position:relative;display:flex; flex-direction:row">
+          
           <!-- SIDEBAR -->
           <div class="w-1/5 bg-gray-900 h-screen sidebar">
               <!-- LOGO -->
@@ -53,6 +54,10 @@
                               <button type="submit">Logout</button>
                           </form>
                       </li>
+                      <li class="main-header__item">
+                        <a class="<%= path === '/stores-list' ? 'active' : '' %>" href="/stores-list">All my stores</a>
+                    </li>
+
                   <% } %>
                 </ul>
               </div>
@@ -62,40 +67,38 @@
                       stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Ajouter un collaborateur
+                  Add a store
               </h3>
-
+              
                <!-- ADD EVENT FORM -->
-               <form id="store-form" action="/add-store?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
+              <form id="store-form" action="/add-store?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
 
                 <div class="mb-6 text-white w-5/6 mx-auto mt-12">
-                  <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Nom et Prénom</label>
-                  <input name = "city" type="text" id="city" class="input-field" placeholder="Harry Barcia" required id = "store-city" >
-              </div>
-               
-               <div class="mb-6 text-white w-5/6 mx-auto mt-6" >
-                   <label for="geocoder" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Event Address</label>
-                   <div id="geocoder">
-                     
-                   </div>
-               </div>
-                            
+                  <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Store Id</label>
+                  <input name = "city" type="text" id="city" class="input-field" placeholder="PhoneHouse Store..." required id = "store-city" >
+                </div>
+                
+                <div class="mb-6 text-white w-5/6 mx-auto mt-6" >
+                    <label for="geocoder" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Event Address</label>
+                    <div id="geocoder"></div>
+                </div>
+                              
                 <div class="mb-6 text-white w-5/6 mx-auto mt-6">
                   <label for="image">Image</label>
                   <input type="file" id="image" name="image" value=""/> 
                 </div>
                 <div class="w-5/6 mx-auto flex justify-end">
                   <button type="submit" class="submit-button">Add Product</button>
-                  
                 </div>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              </form>
 
-               </div>
-               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-               </form>
-               
-               <div id="listings" class="listings"></div>
+            </div>
+            <div id="listings" class="listings"></div>
             <!-- MAP -->
-          <div class="h-screen w-full" id="map"></div>
+            <div class="h-screen w-full" id="map" style="z-index:0;position:relative">
+
+            </div>  
         </div>
       <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
       <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
@@ -110,7 +113,7 @@
         x.setAttribute("name", "address");
         const y = document.getElementById("store-form");
         y.appendChild(x);
-
+        console.log(e.target.value);
 
         
       </script>

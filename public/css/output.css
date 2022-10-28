@@ -648,11 +648,14 @@ video {
   }
 }
 
-#listing {
-  width: 200px;
+#listings {
   
-  display: none;
+  position: absolute;
   
+  left: 20%;
+  z-index: 1;
+  width: 20%;
+  overflow-x: hidden;
 }
 
 

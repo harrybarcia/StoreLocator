@@ -138,14 +138,16 @@ map.on('click', 'points', (e) => {
       if (markers[0]) markers[0].remove();
       console.log(markers);
       const coordinates = e.lngLat;
+      
       const marker = new mapboxgl.Marker(
         {
           color: "red",
           draggable: true
         }
       )
-      .setLngLat(coordinates)
-      .addTo(map);
+      if (markers[0]) markers[0].remove();
+      marker.setLngLat(coordinates).addTo(map);
+      
 
 
 
@@ -254,16 +256,14 @@ map.on('click', 'points', (e) => {
         const listings = document.getElementById('listings');
         
         listings.innerHTML = '';
-        listings.className = "listings w-1/6 bg-gray-900 h-screen sidebar";
+        listings.className = "listings w-1/6 bg-gray-900 h-screen sidebar ";
         const listing = listings.appendChild(document.createElement('div'));
+        
         for (let i = 0; i < stores.length; i++) {
-          
-          
-          
           const details = listing.appendChild(document.createElement('div'));
           details.innerHTML = `${stores[i].city}, ${stores[i].location.formattedAddress}`;
           details.innerHTML += `<div><strong>${stores[i].distance.toLocaleString('en').replace(/,/g,' ')} meters away</strong></div>`;
-          details.style = "color: white; padding: 20px;";
+         
         }
       });
       
@@ -272,4 +272,44 @@ map.on('click', 'points', (e) => {
         //   console.log(e);
         // });
         
+        // Quand je click sur la carte, je veux récupérer les stores dans un rayon de 1km et leur attribuer une couleur différente
+
+        map.on('click', function(e) {
+          // je récupère les coordonnées du point sur lequel je viens de cliquer
+          const coordinates = e.lngLat;
+          const arrayCoordinates = [coordinates.lng, coordinates.lat];
+          // je remove les markers
+          const markers = document.getElementsByClassName("mapboxgl-marker");
+          console.log(markers);
+          if (markers) for (let i = 0; i < markers.length; i++) {markers[i].remove();}
+
+          // je récupère les stores et leurs distances par rapport au point sur lequel je viens de cliquer
+          const stores = data.map(store => {
+            const mystore = store.location.coordinates;
+            const distance = Math.round(turf.distance(
+              turf.point(arrayCoordinates),
+              turf.point(mystore),
+              {units: 'meters'}
+              ));
+            store.distance = distance;
+            if (distance < 2000) {
+                const marker = new mapboxgl.Marker(
+                  {
+                    color: "green",
+                    draggable: true
+                  }
+                )
+                .setLngLat(mystore)
+                .addTo(map);
+            }
+            return store;
+          });
+        });
+
+        // je veux loop sur une liste d'adresses geojson
+        // je récupère les coordonnées de chaque adresse dans un geojson, je les transforme en array, je loop dans mon geocoder.
         
+
+
+        // Quand je cherche un centre de formation, idem
+
