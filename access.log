@@ -4906,3 +4906,6 @@
 ::1 - - [28/Oct/2022:20:18:21 +0000] "GET / HTTP/1.1" 200 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
 ::1 - - [28/Oct/2022:20:18:22 +0000] "GET /utils/fetch_map.js HTTP/1.1" 404 157 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
 ::1 - - [28/Oct/2022:20:18:22 +0000] "GET /js/geolocation.js HTTP/1.1" 404 156 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+::1 - - [28/Oct/2022:21:26:16 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+::1 - - [28/Oct/2022:21:26:16 +0000] "GET /utils/fetch_map.js HTTP/1.1" 404 157 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+::1 - - [28/Oct/2022:21:26:16 +0000] "GET /js/geolocation.js HTTP/1.1" 404 156 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
