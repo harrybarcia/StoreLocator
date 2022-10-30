@@ -70,13 +70,19 @@ exports.getStore = (req, res, next) => {
 // @route POST /api-stores
 // @access Public
 exports.addStore=async  (req, res, next)=>{
-  console.log('session addstores', req.headers['csrf-token']);
+  // console.log('session addstores', req.headers['csrf-token']);
   const address=req.body.address;
   const image = req.file.filename;
   const storeId = new mongodb.ObjectId();
-  const userId = req.user._id;
+  const userId = null;
   const city = req.body.city;
   console.log("req", req.body);
+  if (!userId){
+    res.status(401).json({
+      message: 'Unauthorized, please login or create an account'
+    });
+    return;
+  }
         const store=await new Store({
           storeId:storeId,
           address, image, userId, city});
